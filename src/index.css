@@ -308,5 +308,19 @@ body.custom-cursor-active select {
   }
 }
 
+/* Navbar Responsive Rules */
+@media (min-width: 640px) {
+  .navbar-brand-name {
+    display: inline-block !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .desktop-nav {
+    display: none !important;
+  }
+}
+
+
 
 
