@@ -1,224 +1,177 @@
-import { Component, Suspense, useRef, useState, useEffect } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { useGLTF, Float } from '@react-three/drei'
-import * as THREE from 'three'
+import { useEffect } from 'react'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 
 /**
- * Checks if the current browser environment supports WebGL
- */
-function isWebGLAvailable() {
-  if (typeof window === 'undefined') return false
-  try {
-    const canvas = document.createElement('canvas')
-    return !!(
-      window.WebGLRenderingContext &&
-      (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
-    )
-  } catch (e) {
-    return false
-  }
-}
-
-/**
- * Static fallback avatar image displayed when WebGL is unavailable,
- * model loading fails, or reduced motion is preferred.
- */
-export function StaticAvatarFallback() {
-  return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-        maxWidth: '380px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1rem',
-      }}
-    >
-      <div
-        style={{
-          position: 'relative',
-          borderRadius: 'var(--radius-xl)',
-          overflow: 'hidden',
-          border: '1px solid var(--border-medium)',
-          boxShadow: '0 0 40px rgba(139, 92, 246, 0.35)',
-        }}
-      >
-        <img
-          src="/images/avatar.png"
-          alt="Radhika Kandalkar — 3D Developer Avatar representation"
-          style={{
-            width: '100%',
-            height: 'auto',
-            maxHeight: '420px',
-            display: 'block',
-            objectFit: 'cover',
-          }}
-        />
-        {/* Subtle overlay gradient */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(to top, rgba(7, 4, 13, 0.7) 0%, transparent 60%)',
-            pointerEvents: 'none',
-          }}
-        />
-      </div>
-    </div>
-  )
-}
-
-/**
- * Error boundary component catching 3D/WebGL failures
- */
-class AvatarErrorBoundary extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { hasError: false }
-  }
-
-  static getDerivedStateFromError() {
-    return { hasError: true }
-  }
-
-  componentDidCatch(error) {
-    console.warn('Avatar3D encountered an error; falling back to static avatar image:', error)
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return this.props.fallback || <StaticAvatarFallback />
-    }
-    return this.props.children
-  }
-}
-
-/**
- * 3D Avatar Model component with cursor-following rotation and idle float
- */
-function AvatarModel({ prefersReducedMotion }) {
-  const modelRef = useRef()
-  const { scene } = useGLTF('/models/avatar.glb')
-
-  useFrame((state) => {
-    if (!modelRef.current || prefersReducedMotion) return
-
-    // Tilt head/bust smoothly toward pointer coordinates
-    const targetRotX = -state.pointer.y * 0.35
-    const targetRotY = state.pointer.x * 0.55
-
-    modelRef.current.rotation.x = THREE.MathUtils.lerp(
-      modelRef.current.rotation.x,
-      targetRotX,
-      0.06,
-    )
-    modelRef.current.rotation.y = THREE.MathUtils.lerp(
-      modelRef.current.rotation.y,
-      targetRotY,
-      0.06,
-    )
-  })
-
-  return (
-    <group ref={modelRef} dispose={null}>
-      <primitive object={scene} scale={1.85} position={[0, -0.4, 0]} />
-    </group>
-  )
-}
-
-/**
- * Loading fallback skeleton shown while 3D model loads
- */
-function AvatarLoader() {
-  return (
-    <div
-      style={{
-        width: '280px',
-        height: '280px',
-        borderRadius: '50%',
-        border: '2px dashed rgba(167, 139, 250, 0.4)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)',
-        color: 'var(--color-lavender)',
-        fontFamily: 'var(--font-mono)',
-        fontSize: '0.85rem',
-      }}
-    >
-      <span style={{ animation: 'pulse 1.5s infinite' }}>Loading 3D Avatar...</span>
-    </div>
-  )
-}
-
-/**
- * Avatar3D component rendering interactive 3D developer avatar via React Three Fiber
- * with automatic fallback to static image on WebGL failure or load error.
+ * Avatar3D component rendering the developer's pixel-art avatar with
+ * smooth 3D perspective tilt following the cursor, idle float physics,
+ * and holographic violet glow.
  */
 export default function Avatar3D() {
   const prefersReducedMotion = useReducedMotion()
-  const [webGLSupported, setWebGLSupported] = useState(true)
+
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  // Spring physics for responsive 3D tilt
+  const springConfig = { damping: 22, stiffness: 220, mass: 0.3 }
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [16, -16]), springConfig)
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-20, 20]), springConfig)
+  const glareX = useTransform(mouseX, [-0.5, 0.5], ['0%', '100%'])
+  const glareY = useTransform(mouseY, [-0.5, 0.5], ['0%', '100%'])
 
   useEffect(() => {
-    setWebGLSupported(isWebGLAvailable())
-  }, [])
+    if (prefersReducedMotion) return
 
-  if (!webGLSupported) {
-    return <StaticAvatarFallback />
-  }
+    const handleMouseMove = (e) => {
+      const { innerWidth, innerHeight } = window
+      // Normalize pointer between -0.5 and 0.5
+      mouseX.set(e.clientX / innerWidth - 0.5)
+      mouseY.set(e.clientY / innerHeight - 0.5)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [mouseX, mouseY, prefersReducedMotion])
 
   return (
-    <AvatarErrorBoundary fallback={<StaticAvatarFallback />}>
-      <div
+    <div
+      style={{
+        width: '100%',
+        maxWidth: '430px',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        perspective: '1200px',
+      }}
+    >
+      {/* 3D Tilting and Floating Card */}
+      <motion.div
+        animate={
+          prefersReducedMotion
+            ? {}
+            : {
+                y: [-8, 8, -8],
+              }
+        }
+        transition={{
+          repeat: Infinity,
+          duration: 4.5,
+          ease: 'easeInOut',
+        }}
         style={{
-          width: '100%',
-          height: '460px',
-          maxWidth: '520px',
           position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          width: '100%',
+          transformStyle: 'preserve-3d',
+          rotateX: prefersReducedMotion ? 0 : rotateX,
+          rotateY: prefersReducedMotion ? 0 : rotateY,
+          cursor: 'grab',
         }}
       >
-        <Suspense fallback={<AvatarLoader />}>
-          <Canvas
-            camera={{ position: [0, 0, 4.2], fov: 45 }}
-            style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
-            gl={{
-              alpha: true,
-              antialias: true,
-              powerPreference: 'high-performance',
+        {/* Outer glowing border card */}
+        <div
+          style={{
+            position: 'relative',
+            borderRadius: '28px',
+            padding: '10px',
+            background:
+              'linear-gradient(135deg, rgba(196, 181, 253, 0.4) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(109, 40, 217, 0.5) 100%)',
+            boxShadow:
+              '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 50px rgba(139, 92, 246, 0.35), inset 0 0 20px rgba(167, 139, 250, 0.2)',
+            backdropFilter: 'blur(12px)',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Avatar Image */}
+          <div
+            style={{
+              position: 'relative',
+              borderRadius: '20px',
+              overflow: 'hidden',
+              background: '#0d0718',
             }}
           >
-            {/* Violet After Dark 3D Lighting */}
-            <ambientLight intensity={0.9} color="#e9d5ff" />
-            <directionalLight position={[4, 6, 4]} intensity={2.2} color="#ffffff" />
-            <pointLight position={[-4, -2, -3]} intensity={3.5} color="#8b5cf6" />
-            <pointLight position={[3, -1, -2]} intensity={2.5} color="#a855f7" />
-            <pointLight position={[0, 4, 3]} intensity={1.5} color="#ddd6fe" />
+            <img
+              src="/images/avatar.png"
+              alt="Radhika Kandalkar — Developer Avatar"
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+                imageRendering: 'pixelated',
+                transform: 'scale(1.01)',
+                transition: 'transform 0.3s ease',
+              }}
+            />
 
-            {/* Idle Hover Float Animation */}
-            <Float
-              speed={prefersReducedMotion ? 0 : 2.2}
-              rotationIntensity={prefersReducedMotion ? 0 : 0.25}
-              floatIntensity={prefersReducedMotion ? 0 : 0.6}
-              floatingRange={[-0.1, 0.1]}
-            >
-              <AvatarModel prefersReducedMotion={prefersReducedMotion} />
-            </Float>
-          </Canvas>
-        </Suspense>
-      </div>
-    </AvatarErrorBoundary>
+            {/* Subtle holographic sheen following cursor */}
+            {!prefersReducedMotion && (
+              <motion.div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background:
+                    'radial-gradient(circle 320px at center, rgba(255, 255, 255, 0.15) 0%, transparent 65%)',
+                  left: glareX,
+                  top: glareY,
+                  transform: 'translate(-50%, -50%)',
+                  pointerEvents: 'none',
+                  mixBlendMode: 'overlay',
+                }}
+              />
+            )}
+
+            {/* Bottom vignette glow */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'linear-gradient(to top, rgba(7, 4, 13, 0.5) 0%, transparent 40%)',
+                pointerEvents: 'none',
+              }}
+            />
+          </div>
+
+          {/* Interactive Status Pill */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '22px',
+              left: '50%',
+              transform: 'translateX(-50%) translateZ(30px)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              padding: '0.35rem 0.9rem',
+              borderRadius: '9999px',
+              background: 'rgba(7, 4, 13, 0.82)',
+              border: '1px solid rgba(167, 139, 250, 0.35)',
+              backdropFilter: 'blur(10px)',
+              color: 'var(--color-lavender)',
+              fontSize: '0.75rem',
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.06em',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(139, 92, 246, 0.3)',
+              userSelect: 'none',
+              pointerEvents: 'none',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor: '#10b981',
+                boxShadow: '0 0 8px #10b981',
+              }}
+            />
+            <span>radhika.dev // active</span>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   )
-}
-
-// Preload 3D model
-try {
-  useGLTF.preload('/models/avatar.glb')
-} catch (e) {
-  // Graceful no-op if preload fails
 }
