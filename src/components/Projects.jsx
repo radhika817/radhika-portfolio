@@ -1,12 +1,16 @@
+import { useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import { projects } from '../data/content'
 import ProjectCard from './ProjectCard'
+import ProjectCaseStudyModal from './ProjectCaseStudyModal'
 
 /**
  * Projects Section layout rendering SmartRide, PrepPulse, and Socio3
- * with section headers and responsive cards grid.
+ * with section headers, responsive cards grid, and interactive case study modal.
  */
-export default function Projects({ renderCardContent }) {
+export default function Projects() {
+  const [activeCaseStudy, setActiveCaseStudy] = useState(null)
+
   return (
     <section
       id="projects"
@@ -67,11 +71,20 @@ export default function Projects({ renderCardContent }) {
         }}
       >
         {projects.map((project) => (
-          <ProjectCard key={project.id} project={project}>
-            {renderCardContent ? renderCardContent(project) : null}
-          </ProjectCard>
+          <ProjectCard
+            key={project.id}
+            project={project}
+            onOpenCaseStudy={(p) => setActiveCaseStudy(p)}
+          />
         ))}
       </div>
+
+      {/* Case Study Modal */}
+      <ProjectCaseStudyModal
+        project={activeCaseStudy}
+        isOpen={!!activeCaseStudy}
+        onClose={() => setActiveCaseStudy(null)}
+      />
     </section>
   )
 }
