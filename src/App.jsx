@@ -7,12 +7,13 @@ import CustomCursor from './components/CustomCursor'
 import CursorGlow from './components/CursorGlow'
 import ParticleTrail from './components/ParticleTrail'
 import ClickRipple from './components/ClickRipple'
-import { projects, stats, personalInfo } from './data/content'
+import { stats, personalInfo } from './data/content'
 import { useReducedMotion } from './hooks/useReducedMotion'
 import { usePointerType } from './hooks/usePointerType'
 import { useSmoothScroll } from './hooks/useSmoothScroll'
 import { useActiveSection } from './hooks/useActiveSection'
 import About from './components/About'
+import Projects from './components/Projects'
 
 const SECTION_IDS = ['about', 'projects', 'skills', 'achievements', 'terminal', 'contact']
 
@@ -114,98 +115,8 @@ export default function App() {
         {/* Section: About with Animated Stat Counters */}
         <About />
 
-        {/* Section: Projects Skeleton */}
-        <section
-          id="projects"
-          style={{
-            padding: '3.5rem 0',
-            scrollMarginTop: '80px',
-            borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
-          }}
-        >
-          <div
-            style={{
-              display: 'inline-block',
-              color: 'var(--color-violet-light)',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.85rem',
-              marginBottom: '0.5rem',
-            }}
-          >
-            // 02. PORTFOLIO
-          </div>
-          <h2
-            style={{
-              fontSize: '2rem',
-              marginBottom: '1.5rem',
-              color: 'var(--text-primary)',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Featured Projects ({projects.length})
-          </h2>
-          <div style={{ display: 'grid', gap: '1.25rem' }}>
-            {projects.map((project) => (
-              <div
-                key={project.id}
-                data-cursor="View"
-                style={{
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '1.75rem',
-                  boxShadow: 'var(--glow-card)',
-                }}
-              >
-                <h3
-                  style={{
-                    fontSize: '1.35rem',
-                    color: 'var(--text-primary)',
-                    marginBottom: '0.3rem',
-                  }}
-                >
-                  {project.title}{' '}
-                  <span
-                    style={{
-                      fontSize: '0.95rem',
-                      color: 'var(--color-violet-light)',
-                      fontWeight: 400,
-                    }}
-                  >
-                    — {project.subtitle}
-                  </span>
-                </h3>
-                <p
-                  style={{
-                    color: 'var(--text-secondary)',
-                    fontSize: '0.95rem',
-                    margin: '0.6rem 0 1.25rem',
-                  }}
-                >
-                  {project.description}
-                </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  {project.tech.map((t) => (
-                    <span
-                      key={t}
-                      style={{
-                        fontSize: '0.78rem',
-                        fontFamily: 'var(--font-mono)',
-                        padding: '0.25rem 0.6rem',
-                        borderRadius: 'var(--radius-xs)',
-                        background: 'rgba(139, 92, 246, 0.12)',
-                        color: 'var(--color-lavender)',
-                        border: '1px solid rgba(139, 92, 246, 0.25)',
-                      }}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* Section: Featured Projects */}
+        <Projects />
 
         {/* Section: Skills Skeleton */}
         <section
