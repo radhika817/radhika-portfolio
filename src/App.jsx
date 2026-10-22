@@ -1,14 +1,19 @@
 import { useState } from 'react'
 import Preloader from './components/Preloader'
+import Navbar from './components/Navbar'
+import ScrollProgressBar from './components/ScrollProgressBar'
 import Hero from './components/Hero'
 import CustomCursor from './components/CustomCursor'
 import CursorGlow from './components/CursorGlow'
 import ParticleTrail from './components/ParticleTrail'
 import ClickRipple from './components/ClickRipple'
-import { projects, stats } from './data/content'
+import { projects, stats, personalInfo } from './data/content'
 import { useReducedMotion } from './hooks/useReducedMotion'
 import { usePointerType } from './hooks/usePointerType'
 import { useSmoothScroll } from './hooks/useSmoothScroll'
+import { useActiveSection } from './hooks/useActiveSection'
+
+const SECTION_IDS = ['about', 'projects', 'skills', 'achievements', 'terminal', 'contact']
 
 export default function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false)
@@ -18,8 +23,17 @@ export default function App() {
   // Initialize Lenis smooth scroll synced with GSAP ScrollTrigger
   useSmoothScroll()
 
+  // Track active section for navbar highlighting
+  const activeSection = useActiveSection(SECTION_IDS)
+
   return (
     <div style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
+      {/* Top Scroll Progress Indicator */}
+      <ScrollProgressBar />
+
+      {/* Fixed Glassmorphism Navbar */}
+      <Navbar activeSection={activeSection} />
+
       {/* Preloader Intro Sequence */}
       <Preloader onComplete={() => setIsIntroComplete(true)} />
 
@@ -32,7 +46,7 @@ export default function App() {
       {/* Hero Section with 3D Avatar, Aurora Glow, and CTAs */}
       <Hero />
 
-      {/* Main Content Area (Projects, Stats & Diagnostic Suite) */}
+      {/* Main Content Area with Semantic Section Skeletons */}
       <main
         style={{
           maxWidth: '1100px',
@@ -48,7 +62,7 @@ export default function App() {
             display: 'flex',
             flexWrap: 'wrap',
             gap: '0.75rem',
-            marginBottom: '2.5rem',
+            marginBottom: '3rem',
             justifyContent: 'center',
           }}
         >
@@ -64,7 +78,21 @@ export default function App() {
               fontFamily: 'var(--font-mono)',
             }}
           >
-            Stage 3: Hero & 3D Avatar Active
+            Stage 4: Navigation & Smooth Scroll Active
+          </span>
+          <span
+            style={{
+              display: 'inline-block',
+              padding: '0.25rem 0.75rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(139, 92, 246, 0.12)',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--color-violet-light)',
+              fontSize: '0.82rem',
+              fontFamily: 'var(--font-mono)',
+            }}
+          >
+            Active Section: #{activeSection || 'hero'}
           </span>
           <span
             style={{
@@ -80,68 +108,68 @@ export default function App() {
           >
             Pointer: {hasFinePointer ? 'Fine Mouse' : 'Touch/Coarse'}
           </span>
-          <span
-            style={{
-              display: 'inline-block',
-              padding: '0.25rem 0.75rem',
-              borderRadius: 'var(--radius-full)',
-              background: prefersReducedMotion ? 'rgba(245, 158, 11, 0.15)' : 'rgba(139, 92, 246, 0.12)',
-              border: `1px solid ${prefersReducedMotion ? 'rgba(245, 158, 11, 0.3)' : 'var(--border-subtle)'}`,
-              color: prefersReducedMotion ? '#fcd34d' : 'var(--text-muted)',
-              fontSize: '0.82rem',
-              fontFamily: 'var(--font-mono)',
-            }}
-          >
-            Reduced Motion: {prefersReducedMotion ? 'Enabled' : 'Disabled'}
-          </span>
         </div>
 
-        {/* Stats Grid */}
+        {/* Section: About Skeleton */}
         <section
+          id="about"
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1rem',
-            marginBottom: '3.5rem',
+            padding: '3rem 0',
+            scrollMarginTop: '80px',
+            borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
           }}
         >
-          {stats.map((stat) => (
-            <div
-              key={stat.label}
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 'var(--radius-md)',
-                padding: '1.4rem',
-                boxShadow: 'var(--glow-card)',
-                backdropFilter: 'blur(8px)',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: '2rem',
-                  fontWeight: 700,
-                  color: 'var(--text-primary)',
-                  fontFamily: 'var(--font-mono)',
-                }}
-              >
-                {stat.value}
-                {stat.suffix}
-              </div>
-              <div style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '0.35rem' }}>
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </section>
-
-        {/* Projects Preview */}
-        <section id="projects" style={{ marginBottom: '3.5rem' }}>
+          <div
+            style={{
+              display: 'inline-block',
+              color: 'var(--color-violet-light)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.85rem',
+              marginBottom: '0.5rem',
+            }}
+          >
+            // 01. BACKGROUND
+          </div>
           <h2
             style={{
-              fontSize: '1.75rem',
+              fontSize: '2rem',
+              marginBottom: '1rem',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            About Me
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: '750px' }}>
+            {personalInfo.bio}
+          </p>
+        </section>
+
+        {/* Section: Projects Skeleton */}
+        <section
+          id="projects"
+          style={{
+            padding: '3.5rem 0',
+            scrollMarginTop: '80px',
+            borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
+          }}
+        >
+          <div
+            style={{
+              display: 'inline-block',
+              color: 'var(--color-violet-light)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.85rem',
+              marginBottom: '0.5rem',
+            }}
+          >
+            // 02. PORTFOLIO
+          </div>
+          <h2
+            style={{
+              fontSize: '2rem',
               marginBottom: '1.5rem',
-              color: 'var(--color-lavender)',
+              color: 'var(--text-primary)',
               letterSpacing: '-0.02em',
             }}
           >
@@ -158,7 +186,6 @@ export default function App() {
                   borderRadius: 'var(--radius-lg)',
                   padding: '1.75rem',
                   boxShadow: 'var(--glow-card)',
-                  transition: 'border-color 0.25s ease, transform 0.25s ease',
                 }}
               >
                 <h3
@@ -209,6 +236,162 @@ export default function App() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Section: Skills Skeleton */}
+        <section
+          id="skills"
+          style={{
+            padding: '3.5rem 0',
+            scrollMarginTop: '80px',
+            borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
+          }}
+        >
+          <div
+            style={{
+              display: 'inline-block',
+              color: 'var(--color-violet-light)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.85rem',
+              marginBottom: '0.5rem',
+            }}
+          >
+            // 03. CAPABILITIES
+          </div>
+          <h2
+            style={{
+              fontSize: '2rem',
+              marginBottom: '1rem',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Technical Skills
+          </h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+            Languages, frameworks, Web3 smart contracts, databases, and core computer science foundations.
+          </p>
+        </section>
+
+        {/* Section: Achievements Skeleton */}
+        <section
+          id="achievements"
+          style={{
+            padding: '3.5rem 0',
+            scrollMarginTop: '80px',
+            borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
+          }}
+        >
+          <div
+            style={{
+              display: 'inline-block',
+              color: 'var(--color-violet-light)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.85rem',
+              marginBottom: '0.5rem',
+            }}
+          >
+            // 04. HONORS
+          </div>
+          <h2
+            style={{
+              fontSize: '2rem',
+              marginBottom: '1rem',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Achievements & Recognition
+          </h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+            1st Prize Sinhgad Hackathon 2026, Vellora Hackathon Top 10, Decode SIH Top 50.
+          </p>
+        </section>
+
+        {/* Section: Terminal Skeleton */}
+        <section
+          id="terminal"
+          style={{
+            padding: '3.5rem 0',
+            scrollMarginTop: '80px',
+            borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
+          }}
+        >
+          <div
+            style={{
+              display: 'inline-block',
+              color: 'var(--color-violet-light)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.85rem',
+              marginBottom: '0.5rem',
+            }}
+          >
+            // 05. INTERACTION
+          </div>
+          <h2
+            style={{
+              fontSize: '2rem',
+              marginBottom: '1rem',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Interactive Terminal
+          </h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+            CLI developer sandbox supporting commands: help, projects, skills, achievements, contact.
+          </p>
+        </section>
+
+        {/* Section: Contact Skeleton */}
+        <section
+          id="contact"
+          style={{
+            padding: '3.5rem 0 2rem',
+            scrollMarginTop: '80px',
+          }}
+        >
+          <div
+            style={{
+              display: 'inline-block',
+              color: 'var(--color-violet-light)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.85rem',
+              marginBottom: '0.5rem',
+            }}
+          >
+            // 06. CONNECT
+          </div>
+          <h2
+            style={{
+              fontSize: '2rem',
+              marginBottom: '1rem',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Get In Touch
+          </h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginBottom: '1.5rem' }}>
+            Open for software engineering internships, collaborative projects, and tech opportunities.
+          </p>
+          <a
+            href={`mailto:${personalInfo.email}`}
+            data-cursor="Open"
+            style={{
+              display: 'inline-flex',
+              padding: '0.85rem 1.6rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'linear-gradient(135deg, var(--color-violet), #6d28d9)',
+              color: '#ffffff',
+              fontWeight: 600,
+              fontSize: '0.95rem',
+              boxShadow: '0 0 24px rgba(139, 92, 246, 0.4)',
+              textDecoration: 'none',
+            }}
+          >
+            {personalInfo.email}
+          </a>
         </section>
       </main>
     </div>
