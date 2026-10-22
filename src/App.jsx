@@ -12,6 +12,7 @@ import { useReducedMotion } from './hooks/useReducedMotion'
 import { usePointerType } from './hooks/usePointerType'
 import { useSmoothScroll } from './hooks/useSmoothScroll'
 import { useActiveSection } from './hooks/useActiveSection'
+import About from './components/About'
 
 const SECTION_IDS = ['about', 'projects', 'skills', 'achievements', 'terminal', 'contact']
 
@@ -110,40 +111,8 @@ export default function App() {
           </span>
         </div>
 
-        {/* Section: About Skeleton */}
-        <section
-          id="about"
-          style={{
-            padding: '3rem 0',
-            scrollMarginTop: '80px',
-            borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
-          }}
-        >
-          <div
-            style={{
-              display: 'inline-block',
-              color: 'var(--color-violet-light)',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.85rem',
-              marginBottom: '0.5rem',
-            }}
-          >
-            // 01. BACKGROUND
-          </div>
-          <h2
-            style={{
-              fontSize: '2rem',
-              marginBottom: '1rem',
-              color: 'var(--text-primary)',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            About Me
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: '750px' }}>
-            {personalInfo.bio}
-          </p>
-        </section>
+        {/* Section: About with Animated Stat Counters */}
+        <About />
 
         {/* Section: Projects Skeleton */}
         <section
