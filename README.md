@@ -89,7 +89,6 @@ A Web3 social platform featuring IPFS-based content storage, wallet authenticati
 -   Firebase Firestore for real-time data management and social interactions.
 -   **Achievement:** 1st place at Sinhgad Hackathon 2026.
 -   **Live demo:** https://socio3.vercel.app
--   **Repository:** https://github.com/atharvabaodhankar/Socio3
 
 ## Experience
 

@@ -166,3 +166,15 @@ button {
     scroll-behavior: auto !important;
   }
 }
+
+/* Hide native cursor ONLY when custom cursor is active on fine-pointer devices */
+body.custom-cursor-active,
+body.custom-cursor-active a,
+body.custom-cursor-active button,
+body.custom-cursor-active input,
+body.custom-cursor-active textarea,
+body.custom-cursor-active [role="button"],
+body.custom-cursor-active select {
+  cursor: none !important;
+}
+
