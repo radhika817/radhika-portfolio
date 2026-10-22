@@ -4,13 +4,23 @@ import { ArrowDown, FileText, Mail } from 'lucide-react'
 import { personalInfo } from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import MagneticButton from './MagneticButton'
+import Avatar3D from './Avatar3D'
+
+// Ambient particles orbiting near the avatar
+const AMBIENT_PARTICLES = [
+  { id: 1, top: '15%', left: '10%', size: 4, delay: '0s', duration: '5s' },
+  { id: 2, top: '25%', right: '12%', size: 3, delay: '1.2s', duration: '6.5s' },
+  { id: 3, bottom: '20%', left: '15%', size: 5, delay: '2.5s', duration: '7s' },
+  { id: 4, bottom: '25%', right: '18%', size: 3, delay: '0.8s', duration: '5.5s' },
+  { id: 5, top: '55%', left: '5%', size: 4, delay: '1.8s', duration: '6.2s' },
+]
 
 /**
  * Hero component providing full-screen hero layout, availability badge,
  * large gradient heading, typewriter role animation, short tagline,
- * and magnetic CTAs (View Projects, Download Resume, Contact Me).
+ * magnetic CTAs, 3D developer avatar with aurora glow, and pulsing scroll indicator.
  */
-export default function Hero({ avatarSlot, scrollIndicatorSlot }) {
+export default function Hero() {
   const prefersReducedMotion = useReducedMotion()
   const fullRole = personalInfo.title // "Full-Stack Developer · AI · Web3"
   const [displayedRole, setDisplayedRole] = useState(prefersReducedMotion ? fullRole : '')
@@ -44,21 +54,34 @@ export default function Hero({ avatarSlot, scrollIndicatorSlot }) {
       style={{
         position: 'relative',
         minHeight: '100vh',
-        minHeight: '100dvh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '6rem 1.5rem 4rem',
+        padding: '6rem 1.5rem 5rem',
         overflow: 'hidden',
       }}
     >
+      {/* Subtle perspective grid lines */}
       <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage:
+            'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 70%)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}
+      />
+
+      <div
+        className="hero-grid-container"
         style={{
           width: '100%',
           maxWidth: '1200px',
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gridTemplateColumns: 'minmax(320px, 1.2fr) minmax(320px, 1fr)',
           gap: '3rem',
           alignItems: 'center',
           position: 'relative',
@@ -106,7 +129,7 @@ export default function Hero({ avatarSlot, scrollIndicatorSlot }) {
           {/* Name Header */}
           <h1
             style={{
-              fontSize: 'clamp(2.75rem, 6vw, 4.5rem)',
+              fontSize: 'clamp(2.75rem, 5.5vw, 4.5rem)',
               fontWeight: 800,
               lineHeight: 1.08,
               letterSpacing: '-0.03em',
@@ -144,7 +167,7 @@ export default function Hero({ avatarSlot, scrollIndicatorSlot }) {
             />
           </div>
 
-          {/* Tagline */}
+          {/* Tagline from README.md */}
           <p
             style={{
               fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
@@ -245,23 +268,79 @@ export default function Hero({ avatarSlot, scrollIndicatorSlot }) {
           </div>
         </motion.div>
 
-        {/* Right Column: Avatar Container */}
+        {/* Right Column: 3D Avatar, Aurora Glow, and Particles */}
         <div
+          className="hero-avatar-column"
+          data-cursor="Drag"
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             position: 'relative',
             width: '100%',
-            minHeight: '400px',
+            minHeight: '440px',
           }}
         >
-          {avatarSlot}
+          {/* Animated Aurora Glow behind Avatar */}
+          <div className="hero-aurora-glow" aria-hidden="true" />
+
+          {/* Floating Ambient Particles */}
+          {!prefersReducedMotion && (
+            <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+              {AMBIENT_PARTICLES.map((p) => (
+                <div
+                  key={p.id}
+                  className="hero-particle"
+                  style={{
+                    top: p.top,
+                    left: p.left,
+                    right: p.right,
+                    bottom: p.bottom,
+                    width: `${p.size}px`,
+                    height: `${p.size}px`,
+                    animationDelay: p.delay,
+                    animationDuration: p.duration,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* 3D Avatar */}
+          <Avatar3D />
         </div>
       </div>
 
-      {/* Scroll indicator slot */}
-      {scrollIndicatorSlot}
+      {/* Pulsing Scroll Indicator */}
+      <motion.a
+        href="#projects"
+        data-cursor="Open"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9, duration: 0.6 }}
+        style={{
+          position: 'absolute',
+          bottom: '1.75rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '0.5rem',
+          color: 'var(--text-muted)',
+          fontSize: '0.72rem',
+          fontFamily: 'var(--font-mono)',
+          letterSpacing: '0.14em',
+          textTransform: 'uppercase',
+          textDecoration: 'none',
+          zIndex: 5,
+        }}
+      >
+        <span>Scroll</span>
+        <div className="mouse-scroll-pill">
+          <div className="mouse-scroll-dot" />
+        </div>
+      </motion.a>
     </section>
   )
 }
