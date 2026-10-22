@@ -65,7 +65,7 @@ A full-stack carpooling platform featuring geospatial route matching based on ro
 -   Commuter verification, emergency SOS alerts, and expiring trip-sharing links.
 -   Fuel, toll, and parking cost splitting.
 -   **Live demo:** https://smart-carpooling.vercel.app
--   **Repository:** Add the correct GitHub repository URL.
+
 
 ### PrepPulse — AI-Powered Interview Preparation
 
@@ -187,7 +187,7 @@ radhika-portfolio/
 └── README.md
 ```
 
-## Build Plan (with Antigravity)
+## Build Plan 
 
 Build in small, reviewable stages. Give Antigravity one stage at a time and check the result in the browser before moving on.
 
@@ -201,31 +201,5 @@ Build in small, reviewable stages. Give Antigravity one stage at a time and chec
 8.  **Polish:** Accessibility, mobile layouts, performance (lazy-load 3D), SEO meta tags.
 9.  **Deploy:** Vercel.
 
-Starter prompt for Antigravity:
-
-> Read README.md. Scaffold a React + Vite portfolio following the structure and Tech Stack sections. Start with stage 1 and stage 2 (design tokens and the custom cursor system). Respect reduced-motion and touch-device fallbacks. Stop after those stages so I can review.
-
-## Before Publishing
-
--   [ ] Add the correct GitHub repository URLs for PrepPulse and SmartRide.
--   [ ] Add the PrepPulse live demo URL and confirm all live demo URLs work.
--   [ ] Add the resume PDF to `public/resume.pdf` and connect the Resume button to it.
--   [ ] Add the 3D avatar (`public/models/avatar.glb`) and a static fallback image in `public/images/`.
--   [ ] Replace placeholder project visuals with screenshots from the actual applications.
--   [ ] Add verified LinkedIn, GitHub, LeetCode, and CodeChef profile URLs.
--   [ ] Test cursor effects on desktop, and confirm the native cursor works on touch devices.
--   [ ] Test mobile layouts, keyboard navigation, and reduced-motion settings.
--   [ ] Check performance (Lighthouse) with the 3D avatar and animations enabled.
--   [ ] Deploy the finished site, for example with Vercel.
-
-## Contact
-
--   **Email:** radhikakandalkar54@gmail.com
--   **Location:** Pune, India
--   **LinkedIn:** Add profile URL
--   **GitHub:** Add profile URL
--   **LeetCode / CodeChef:** Add profile URLs
-
-------------------------------------------------------------------------
 
 Built with curiosity, iteration, and a focus on solving real problems.
