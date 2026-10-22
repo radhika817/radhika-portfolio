@@ -77,8 +77,7 @@ An interview preparation platform with 198 curated questions across DSA, DBMS, O
 -   Leitner-based spaced repetition to prioritize weak topics and schedule revisions.
 -   Groq-powered answer feedback.
 -   JWT authentication, role-based access control, and dashboards for accuracy, streaks, and revision progress.
--   **Live demo:** Add the deployed URL.
--   **Repository:** Add the correct GitHub repository URL.
+-   **Live demo:** https://prep-pulse-hazel.vercel.app/
 
 ### Socio3 — Decentralized Social Media dApp
 

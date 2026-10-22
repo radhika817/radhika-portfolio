@@ -1,22 +1,25 @@
 import { useEffect, useState } from 'react'
-import { motion, useMotionValue, useSpring } from 'framer-motion'
+import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { usePointerType } from '../hooks/usePointerType'
 
 /**
- * CustomCursor component with central dot and trailing ring utilizing Framer Motion spring physics.
- * Hides native cursor only on fine-pointer devices and respects prefers-reduced-motion.
+ * CustomCursor component with interactive hover states, dynamic labels
+ * ("View", "Open", "Drag"), and click shrink physics.
  */
 export default function CustomCursor() {
   const prefersReducedMotion = useReducedMotion()
   const { hasFinePointer } = usePointerType()
   const [isVisible, setIsVisible] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isClicking, setIsClicking] = useState(false)
+  const [cursorLabel, setCursorLabel] = useState('')
 
   const mouseX = useMotionValue(-100)
   const mouseY = useMotionValue(-100)
 
   // Spring physics for trailing ring
-  const springConfig = { damping: 28, stiffness: 260, mass: 0.5 }
+  const springConfig = { damping: 26, stiffness: 280, mass: 0.5 }
   const ringX = useSpring(mouseX, springConfig)
   const ringY = useSpring(mouseY, springConfig)
 
@@ -26,7 +29,6 @@ export default function CustomCursor() {
   const dotY = useSpring(mouseY, dotSpringConfig)
 
   useEffect(() => {
-    // Only hide native cursor if fine pointer and not reduced motion
     if (!hasFinePointer || prefersReducedMotion) {
       document.body.classList.remove('custom-cursor-active')
       return
@@ -48,21 +50,101 @@ export default function CustomCursor() {
       setIsVisible(true)
     }
 
+    const handleMouseDown = () => {
+      setIsClicking(true)
+    }
+
+    const handleMouseUp = () => {
+      setIsClicking(false)
+    }
+
+    // Interactive element detection via event delegation
+    const handleMouseOver = (e) => {
+      const target = e.target
+
+      // Check for explicit data-cursor label
+      const cursorEl = target.closest('[data-cursor], [data-cursor-label]')
+      if (cursorEl) {
+        setIsHovered(true)
+        const label =
+          cursorEl.getAttribute('data-cursor-label') ||
+          cursorEl.getAttribute('data-cursor') ||
+          ''
+        // If data-cursor is just a boolean or empty string, no label
+        if (label && label !== 'true' && label !== 'false') {
+          setCursorLabel(label)
+        } else {
+          setCursorLabel('')
+        }
+        return
+      }
+
+      // Check standard interactive elements
+      const interactiveEl = target.closest('a, button, input, textarea, select, [role="button"]')
+      if (interactiveEl) {
+        setIsHovered(true)
+        setCursorLabel('')
+      } else {
+        setIsHovered(false)
+        setCursorLabel('')
+      }
+    }
+
+    const handleMouseOut = (e) => {
+      // If mouse leaves the current window or target has no relatedTarget
+      if (!e.relatedTarget) {
+        setIsHovered(false)
+        setCursorLabel('')
+        return
+      }
+
+      const relatedInteractive = e.relatedTarget.closest(
+        '[data-cursor], [data-cursor-label], a, button, input, textarea, select, [role="button"]',
+      )
+      if (!relatedInteractive) {
+        setIsHovered(false)
+        setCursorLabel('')
+      }
+    }
+
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    window.addEventListener('mousedown', handleMouseDown)
+    window.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener('mouseover', handleMouseOver)
+    document.addEventListener('mouseout', handleMouseOut)
     document.addEventListener('mouseleave', handleMouseLeave)
     document.addEventListener('mouseenter', handleMouseEnter)
 
     return () => {
       document.body.classList.remove('custom-cursor-active')
       window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mousedown', handleMouseDown)
+      window.removeEventListener('mouseup', handleMouseUp)
+      document.removeEventListener('mouseover', handleMouseOver)
+      document.removeEventListener('mouseout', handleMouseOut)
       document.removeEventListener('mouseleave', handleMouseLeave)
       document.removeEventListener('mouseenter', handleMouseEnter)
     }
   }, [hasFinePointer, prefersReducedMotion, isVisible, mouseX, mouseY])
 
-  // Don't render on touch or reduced motion
   if (!hasFinePointer || prefersReducedMotion) {
     return null
+  }
+
+  // Determine size based on state
+  let ringSize = 34
+  let ringBg = 'rgba(139, 92, 246, 0.08)'
+  let ringBorder = '1.5px solid rgba(196, 181, 253, 0.75)'
+  let ringScale = isClicking ? 0.75 : 1
+
+  if (cursorLabel) {
+    ringSize = 74
+    ringBg = 'rgba(139, 92, 246, 0.35)'
+    ringBorder = '1.5px solid rgba(221, 214, 254, 0.95)'
+  } else if (isHovered) {
+    ringSize = 50
+    ringBg = 'rgba(139, 92, 246, 0.2)'
+    ringBorder = '1.5px solid rgba(221, 214, 254, 0.85)'
   }
 
   return (
@@ -78,30 +160,75 @@ export default function CustomCursor() {
         overflow: 'hidden',
       }}
     >
-      {/* Trailing Ring with spring physics */}
+      {/* Trailing Ring with dynamic size, hover state, and label */}
       <motion.div
         aria-hidden="true"
+        animate={{
+          width: ringSize,
+          height: ringSize,
+          scale: ringScale,
+          backgroundColor: ringBg,
+          border: ringBorder,
+        }}
+        transition={{
+          width: { duration: 0.2, ease: [0.16, 1, 0.3, 1] },
+          height: { duration: 0.2, ease: [0.16, 1, 0.3, 1] },
+          scale: { duration: 0.15, ease: 'easeOut' },
+          backgroundColor: { duration: 0.2 },
+          border: { duration: 0.2 },
+        }}
         style={{
           position: 'fixed',
           left: ringX,
           top: ringY,
           x: '-50%',
           y: '-50%',
-          width: 34,
-          height: 34,
           borderRadius: '50%',
-          border: '1.5px solid rgba(196, 181, 253, 0.75)',
-          backgroundColor: 'rgba(139, 92, 246, 0.08)',
-          boxShadow: '0 0 16px rgba(139, 92, 246, 0.3)',
+          boxShadow: cursorLabel
+            ? '0 0 24px rgba(139, 92, 246, 0.5), inset 0 0 12px rgba(196, 181, 253, 0.3)'
+            : isHovered
+              ? '0 0 20px rgba(139, 92, 246, 0.4)'
+              : '0 0 16px rgba(139, 92, 246, 0.25)',
+          backdropFilter: cursorLabel ? 'blur(4px)' : 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           pointerEvents: 'none',
           opacity: isVisible ? 1 : 0,
-          transition: 'opacity 0.2s ease',
         }}
-      />
+      >
+        <AnimatePresence>
+          {cursorLabel && (
+            <motion.span
+              key={cursorLabel}
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ duration: 0.15 }}
+              style={{
+                fontSize: '0.68rem',
+                fontWeight: 600,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                color: '#ffffff',
+                fontFamily: 'var(--font-mono)',
+                userSelect: 'none',
+              }}
+            >
+              {cursorLabel}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
-      {/* Center Dot with rapid response */}
+      {/* Center Dot (faded when displaying label, shrinks on click) */}
       <motion.div
         aria-hidden="true"
+        animate={{
+          scale: isClicking ? 0.6 : cursorLabel ? 0 : 1,
+          opacity: isVisible && !cursorLabel ? 1 : 0,
+        }}
+        transition={{ duration: 0.15 }}
         style={{
           position: 'fixed',
           left: dotX,
@@ -114,8 +241,6 @@ export default function CustomCursor() {
           backgroundColor: '#f5f3ff',
           boxShadow: '0 0 8px #c4b5fd',
           pointerEvents: 'none',
-          opacity: isVisible ? 1 : 0,
-          transition: 'opacity 0.15s ease',
         }}
       />
     </div>
