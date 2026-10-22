@@ -1,15 +1,40 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Sparkles } from 'lucide-react'
 import { projects } from '../data/content'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import ProjectCard from './ProjectCard'
 import ProjectCaseStudyModal from './ProjectCaseStudyModal'
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.18,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 35 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.65,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
+}
+
 /**
  * Projects Section layout rendering SmartRide, PrepPulse, and Socio3
- * with section headers, responsive cards grid, and interactive case study modal.
+ * with staggered scroll reveal animations and interactive case study modal.
  */
 export default function Projects() {
   const [activeCaseStudy, setActiveCaseStudy] = useState(null)
+  const prefersReducedMotion = useReducedMotion()
 
   return (
     <section
@@ -21,7 +46,13 @@ export default function Projects() {
       }}
     >
       {/* Section Header */}
-      <div style={{ marginBottom: '2.75rem' }}>
+      <motion.div
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.5 }}
+        style={{ marginBottom: '2.75rem' }}
+      >
         <div
           style={{
             display: 'inline-flex',
@@ -59,11 +90,15 @@ export default function Projects() {
         >
           Full-stack web applications, AI integrations, and Web3 smart contracts focused on solving real problems with scalable architecture.
         </p>
-      </div>
+      </motion.div>
 
-      {/* Projects Grid */}
-      <div
+      {/* Projects Grid with Staggered Scroll Reveal */}
+      <motion.div
         className="projects-grid"
+        variants={prefersReducedMotion ? {} : containerVariants}
+        initial={prefersReducedMotion ? false : 'hidden'}
+        whileInView="visible"
+        viewport={{ once: true, margin: '-50px' }}
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
@@ -71,13 +106,18 @@ export default function Projects() {
         }}
       >
         {projects.map((project) => (
-          <ProjectCard
+          <motion.div
             key={project.id}
-            project={project}
-            onOpenCaseStudy={(p) => setActiveCaseStudy(p)}
-          />
+            variants={prefersReducedMotion ? {} : itemVariants}
+            style={{ height: '100%' }}
+          >
+            <ProjectCard
+              project={project}
+              onOpenCaseStudy={(p) => setActiveCaseStudy(p)}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Case Study Modal */}
       <ProjectCaseStudyModal

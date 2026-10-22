@@ -1,11 +1,30 @@
 import { useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { ExternalLink, Github, Trophy, Clock } from 'lucide-react'
+import { ExternalLink, Trophy, Clock, Route, BrainCircuit, Blocks } from 'lucide-react'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { usePointerType } from '../hooks/usePointerType'
 
+function GithubIcon({ size = 14, ...props }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+      <path d="M9 18c-4.51 2-5-2-7-2" />
+    </svg>
+  )
+}
+
 /**
- * Checks whether a URL is a real, active link or an unconfigured placeholder
+ * Checks whether a URL is a real link or an unconfigured placeholder
  */
 function isValidUrl(url) {
   if (!url || typeof url !== 'string') return false
@@ -14,9 +33,155 @@ function isValidUrl(url) {
 }
 
 /**
+ * Visual banner showing tailored futuristic gradient graphic for each project
+ * until real application screenshots are uploaded.
+ */
+function ProjectVisualBanner({ project }) {
+  const configs = {
+    smartride: {
+      gradient: 'linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(139, 92, 246, 0.25) 100%)',
+      borderColor: 'rgba(56, 189, 248, 0.25)',
+      accentColor: '#38bdf8',
+      icon: <Route size={24} color="#38bdf8" />,
+      tag: 'GEOSPATIAL ROUTE MATCHING',
+      pattern: 'radial-gradient(circle at 20% 40%, rgba(56, 189, 248, 0.25) 0%, transparent 50%)',
+    },
+    preppulse: {
+      gradient: 'linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(16, 185, 129, 0.15) 100%)',
+      borderColor: 'rgba(168, 85, 247, 0.3)',
+      accentColor: '#c084fc',
+      icon: <BrainCircuit size={24} color="#c084fc" />,
+      tag: '198 QUESTIONS // GROQ LLM EVAL',
+      pattern: 'radial-gradient(circle at 80% 30%, rgba(16, 185, 129, 0.2) 0%, transparent 50%)',
+    },
+    socio3: {
+      gradient: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(139, 92, 246, 0.25) 100%)',
+      borderColor: 'rgba(245, 158, 11, 0.35)',
+      accentColor: '#fbbf24',
+      icon: <Blocks size={24} color="#fbbf24" />,
+      tag: 'SEPOLIA dAPP // IPFS STORAGE',
+      pattern: 'radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.2) 0%, transparent 60%)',
+    },
+  }
+
+  const config = configs[project.id] || configs.smartride
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '140px',
+        borderRadius: 'var(--radius-md)',
+        marginBottom: '1.25rem',
+        overflow: 'hidden',
+        background: '#0e081c',
+        border: `1px solid ${config.borderColor}`,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: '1rem',
+      }}
+    >
+      {/* Dynamic background gradient mesh */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: config.gradient,
+          opacity: 0.85,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: config.pattern,
+        }}
+      />
+      {/* Decorative Grid Lines */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage:
+            'linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
+          opacity: 0.6,
+        }}
+      />
+
+      {/* Top Banner Row: Icon + Architecture Badge */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '10px',
+            background: 'rgba(7, 4, 13, 0.65)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {config.icon}
+        </div>
+        <span
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.72rem',
+            color: 'var(--text-primary)',
+            background: 'rgba(7, 4, 13, 0.65)',
+            padding: '0.2rem 0.6rem',
+            borderRadius: 'var(--radius-full)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          {config.tag}
+        </span>
+      </div>
+
+      {/* Bottom Row Tag */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+        }}
+      >
+        <span
+          style={{
+            fontSize: '0.75rem',
+            color: 'var(--color-lavender)',
+            fontFamily: 'var(--font-mono)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            opacity: 0.9,
+          }}
+        >
+          System Architecture Preview
+        </span>
+      </div>
+    </div>
+  )
+}
+
+/**
  * ProjectCard component with 3D tilt hover physics, cursor-tracking border glow,
- * "1st Place, Sinhgad Hackathon 2026" badge on Socio3, and placeholder handling
- * showing disabled "Coming soon" buttons instead of broken links.
+ * tailored gradient visuals, and placeholder-safe link actions.
  */
 export default function ProjectCard({ project, onOpenCaseStudy }) {
   const cardRef = useRef(null)
@@ -25,11 +190,9 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
   const prefersReducedMotion = useReducedMotion()
   const { hasFinePointer } = usePointerType()
 
-  // Motion values for 3D tilt
   const tiltX = useMotionValue(0)
   const tiltY = useMotionValue(0)
 
-  // Spring physics for tilt response
   const springConfig = { damping: 18, stiffness: 180, mass: 0.2 }
   const rotateX = useSpring(useTransform(tiltY, [-0.5, 0.5], [8, -8]), springConfig)
   const rotateY = useSpring(useTransform(tiltX, [-0.5, 0.5], [-10, 10]), springConfig)
@@ -118,7 +281,7 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
             zIndex: 1,
             background: 'var(--bg-card)',
             borderRadius: 'calc(var(--radius-lg) - 1px)',
-            padding: '2rem',
+            padding: '1.75rem',
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -144,13 +307,16 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
           )}
 
           <div style={{ position: 'relative', zIndex: 2 }}>
-            {/* Top row: Award Badge for Socio3 or category */}
+            {/* Visual Banner Preview */}
+            <ProjectVisualBanner project={project} />
+
+            {/* Top row: Award Badge or category */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                marginBottom: '1rem',
+                marginBottom: '0.85rem',
                 minHeight: '26px',
               }}
             >
@@ -183,13 +349,13 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                     letterSpacing: '0.06em',
                   }}
                 >
-                  FEATURED PROJECT
+                  FEATURED WORK
                 </span>
               )}
             </div>
 
             {/* Header: Title and Subtitle */}
-            <div style={{ marginBottom: '1rem' }}>
+            <div style={{ marginBottom: '0.85rem' }}>
               <h3
                 style={{
                   fontSize: '1.45rem',
@@ -203,7 +369,7 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
               </h3>
               <p
                 style={{
-                  fontSize: '0.9rem',
+                  fontSize: '0.88rem',
                   fontFamily: 'var(--font-mono)',
                   color: 'var(--color-violet-light)',
                   fontWeight: 500,
@@ -217,9 +383,9 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
             <p
               style={{
                 color: 'var(--text-secondary)',
-                fontSize: '0.95rem',
-                lineHeight: 1.65,
-                marginBottom: '1.4rem',
+                fontSize: '0.92rem',
+                lineHeight: 1.6,
+                marginBottom: '1.25rem',
               }}
             >
               {project.description}
@@ -230,17 +396,17 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: '0.5rem',
-                marginBottom: '1.75rem',
+                gap: '0.45rem',
+                marginBottom: '1.5rem',
               }}
             >
               {project.tech.map((tech) => (
                 <span
                   key={tech}
                   style={{
-                    fontSize: '0.78rem',
+                    fontSize: '0.75rem',
                     fontFamily: 'var(--font-mono)',
-                    padding: '0.25rem 0.65rem',
+                    padding: '0.22rem 0.6rem',
                     borderRadius: 'var(--radius-xs)',
                     background: 'rgba(139, 92, 246, 0.12)',
                     color: 'var(--color-lavender)',
@@ -253,14 +419,14 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
             </div>
           </div>
 
-          {/* Action Links Bar with Placeholder Handling */}
+          {/* Action Links Bar */}
           <div
             style={{
               position: 'relative',
               zIndex: 2,
               display: 'flex',
               flexWrap: 'wrap',
-              gap: '0.75rem',
+              gap: '0.6rem',
               alignItems: 'center',
               borderTop: '1px solid rgba(139, 92, 246, 0.12)',
               paddingTop: '1.25rem',
@@ -277,7 +443,7 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.45rem',
-                  padding: '0.45rem 0.95rem',
+                  padding: '0.45rem 0.9rem',
                   borderRadius: 'var(--radius-full)',
                   background: 'linear-gradient(135deg, var(--color-violet), #6d28d9)',
                   color: '#ffffff',
@@ -285,7 +451,6 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                   fontWeight: 600,
                   textDecoration: 'none',
                   boxShadow: '0 0 15px rgba(139, 92, 246, 0.35)',
-                  transition: 'all 0.2s ease',
                 }}
               >
                 <span>Live Demo</span>
@@ -297,12 +462,12 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  padding: '0.45rem 0.85rem',
+                  padding: '0.42rem 0.8rem',
                   borderRadius: 'var(--radius-full)',
                   background: 'rgba(255, 255, 255, 0.04)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
                   color: 'var(--text-muted)',
-                  fontSize: '0.8rem',
+                  fontSize: '0.78rem',
                   fontFamily: 'var(--font-mono)',
                   cursor: 'not-allowed',
                   userSelect: 'none',
@@ -325,7 +490,7 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.45rem',
-                  padding: '0.45rem 0.95rem',
+                  padding: '0.45rem 0.9rem',
                   borderRadius: 'var(--radius-full)',
                   background: 'rgba(139, 92, 246, 0.1)',
                   border: '1px solid var(--border-medium)',
@@ -333,11 +498,10 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                   fontSize: '0.82rem',
                   fontWeight: 600,
                   textDecoration: 'none',
-                  transition: 'all 0.2s ease',
                 }}
               >
-                <Github size={14} />
-                <span>Source Code</span>
+                <GithubIcon size={14} />
+                <span>Source</span>
               </a>
             ) : (
               <span
@@ -345,19 +509,19 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  padding: '0.45rem 0.85rem',
+                  padding: '0.42rem 0.8rem',
                   borderRadius: 'var(--radius-full)',
                   background: 'rgba(255, 255, 255, 0.04)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
                   color: 'var(--text-muted)',
-                  fontSize: '0.8rem',
+                  fontSize: '0.78rem',
                   fontFamily: 'var(--font-mono)',
                   cursor: 'not-allowed',
                   userSelect: 'none',
                 }}
                 title="Repository link being finalized"
               >
-                <Github size={13} style={{ opacity: 0.5 }} />
+                <GithubIcon size={13} style={{ opacity: 0.5 }} />
                 <span>Repo coming soon</span>
               </span>
             )}
@@ -373,14 +537,14 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.35rem',
-                  padding: '0.45rem 0.85rem',
+                  padding: '0.42rem 0.8rem',
                   borderRadius: 'var(--radius-full)',
                   color: 'var(--color-violet-light)',
-                  fontSize: '0.82rem',
+                  fontSize: '0.8rem',
                   fontWeight: 500,
                   fontFamily: 'var(--font-mono)',
                   cursor: 'pointer',
-                  border: '1px solid rgba(139, 92, 246, 0.2)',
+                  border: '1px solid rgba(139, 92, 246, 0.25)',
                   background: 'rgba(139, 92, 246, 0.08)',
                   transition: 'all 0.2s ease',
                 }}
