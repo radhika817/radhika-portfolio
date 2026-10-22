@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { ArrowDown, FileText, Mail } from 'lucide-react'
 import { personalInfo } from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import MagneticButton from './MagneticButton'
 
 /**
  * Hero component providing full-screen hero layout, availability badge,
- * large gradient heading, typewriter role animation, and tagline.
+ * large gradient heading, typewriter role animation, short tagline,
+ * and magnetic CTAs (View Projects, Download Resume, Contact Me).
  */
-export default function Hero({ avatarSlot, ctaSlot, scrollIndicatorSlot }) {
+export default function Hero({ avatarSlot, scrollIndicatorSlot }) {
   const prefersReducedMotion = useReducedMotion()
   const fullRole = personalInfo.title // "Full-Stack Developer · AI · Web3"
   const [displayedRole, setDisplayedRole] = useState(prefersReducedMotion ? fullRole : '')
@@ -45,7 +48,7 @@ export default function Hero({ avatarSlot, ctaSlot, scrollIndicatorSlot }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '6rem 1.5rem 3rem',
+        padding: '6rem 1.5rem 4rem',
         overflow: 'hidden',
       }}
     >
@@ -153,11 +156,96 @@ export default function Hero({ avatarSlot, ctaSlot, scrollIndicatorSlot }) {
             {personalInfo.tagline}
           </p>
 
-          {/* CTA Slot */}
-          {ctaSlot && <div style={{ marginTop: '0.75rem' }}>{ctaSlot}</div>}
+          {/* Primary Hero CTAs with Magnetic Effect */}
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              marginTop: '0.75rem',
+              alignItems: 'center',
+            }}
+          >
+            {/* View Projects */}
+            <MagneticButton>
+              <a
+                href="#projects"
+                data-cursor="View"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.85rem 1.6rem',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'linear-gradient(135deg, var(--color-violet) 0%, #6d28d9 100%)',
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  fontSize: '0.95rem',
+                  boxShadow: '0 0 24px rgba(139, 92, 246, 0.45)',
+                  transition: 'all 0.25s ease',
+                  border: '1px solid rgba(196, 181, 253, 0.4)',
+                }}
+              >
+                <span>View Projects</span>
+                <ArrowDown size={17} />
+              </a>
+            </MagneticButton>
+
+            {/* Download Resume */}
+            <MagneticButton>
+              <a
+                href={personalInfo.resumeUrl}
+                download="Radhika_Kandalkar_Resume.pdf"
+                target="_blank"
+                rel="noreferrer"
+                data-cursor="Open"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.85rem 1.5rem',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'rgba(139, 92, 246, 0.1)',
+                  color: 'var(--color-lavender)',
+                  fontWeight: 600,
+                  fontSize: '0.95rem',
+                  border: '1px solid var(--border-medium)',
+                  backdropFilter: 'blur(8px)',
+                  transition: 'all 0.25s ease',
+                }}
+              >
+                <FileText size={17} />
+                <span>Download Resume</span>
+              </a>
+            </MagneticButton>
+
+            {/* Contact Me */}
+            <MagneticButton>
+              <a
+                href="#contact"
+                data-cursor="Open"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.85rem 1.4rem',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  color: 'var(--text-secondary)',
+                  fontWeight: 500,
+                  fontSize: '0.95rem',
+                  border: '1px solid var(--border-glass)',
+                  transition: 'all 0.25s ease',
+                }}
+              >
+                <Mail size={17} />
+                <span>Contact Me</span>
+              </a>
+            </MagneticButton>
+          </div>
         </motion.div>
 
-        {/* Right Column: Avatar Slot (Desktop Right, Mobile Top) */}
+        {/* Right Column: Avatar Container */}
         <div
           style={{
             display: 'flex',
@@ -165,7 +253,7 @@ export default function Hero({ avatarSlot, ctaSlot, scrollIndicatorSlot }) {
             justifyContent: 'center',
             position: 'relative',
             width: '100%',
-            minHeight: '380px',
+            minHeight: '400px',
           }}
         >
           {avatarSlot}
