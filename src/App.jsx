@@ -8,11 +8,15 @@ import ClickRipple from './components/ClickRipple'
 import { projects, stats } from './data/content'
 import { useReducedMotion } from './hooks/useReducedMotion'
 import { usePointerType } from './hooks/usePointerType'
+import { useSmoothScroll } from './hooks/useSmoothScroll'
 
 export default function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false)
   const prefersReducedMotion = useReducedMotion()
   const { hasFinePointer } = usePointerType()
+
+  // Initialize Lenis smooth scroll synced with GSAP ScrollTrigger
+  useSmoothScroll()
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
