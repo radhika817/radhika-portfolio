@@ -1,19 +1,168 @@
 :root {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: dark;
+  /* Color Palette — Violet After Dark */
+  --bg-primary: #07040d;
+  --bg-secondary: #0d0718;
+  --bg-tertiary: #130b24;
+  --bg-surface: #180d2f;
+  --bg-card: rgba(19, 11, 36, 0.7);
+  --bg-card-hover: rgba(29, 17, 54, 0.85);
+  --bg-glass: rgba(14, 8, 26, 0.7);
+  --bg-elevated: rgba(26, 16, 49, 0.95);
+
+  /* Accents */
+  --color-violet: #8b5cf6;
+  --color-violet-light: #a78bfa;
+  --color-violet-dark: #6d28d9;
+  --color-lavender: #c4b5fd;
+  --color-lavender-light: #ddd6fe;
+  --color-lavender-soft: #ede9fe;
+  --color-accent-purple: #7c3aed;
+  --color-accent-pink: #d946ef;
+  --color-accent-cyan: #38bdf8;
+  --color-emerald: #10b981;
+
+  /* Typography Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #8b85a3;
+  --text-faint: #575170;
+  --text-violet: #c4b5fd;
+  --text-gradient: linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #8b5cf6 100%);
+
+  /* Border Tokens */
+  --border-subtle: rgba(139, 92, 246, 0.16);
+  --border-medium: rgba(139, 92, 246, 0.32);
+  --border-glow: rgba(167, 139, 250, 0.55);
+  --border-glass: rgba(255, 255, 255, 0.08);
+
+  /* Glows & Shadows */
+  --glow-sm: 0 0 16px rgba(139, 92, 246, 0.25);
+  --glow-md: 0 0 32px rgba(139, 92, 246, 0.38);
+  --glow-lg: 0 0 64px rgba(139, 92, 246, 0.48);
+  --glow-card: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(139, 92, 246, 0.15);
+  --glow-card-hover: 0 16px 48px rgba(139, 92, 246, 0.25), 0 0 0 1px rgba(167, 139, 250, 0.45);
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3.5rem;
+  --space-3xl: 5rem;
+
+  /* Fonts */
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Transitions */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 150ms var(--ease-spring);
+  --transition-normal: 250ms var(--ease-spring);
+  --transition-slow: 400ms var(--ease-spring);
 }
 
-* {
+/* Base Reset */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html {
+  font-size: 16px;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
 body {
-  margin: 0;
   min-height: 100vh;
-  background-color: #0b0714;
-  color: #f1f0f7;
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  position: relative;
+
+  /* Subtle futuristic grid overlay */
+  background-image: 
+    radial-gradient(ellipse 80% 60% at 50% -20%, rgba(139, 92, 246, 0.18), transparent 70%),
+    linear-gradient(to right, rgba(139, 92, 246, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(139, 92, 246, 0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+  background-position: center top, center center, center center;
+  background-attachment: fixed;
+}
+
+/* Selection */
+::selection {
+  background: rgba(139, 92, 246, 0.45);
+  color: #ffffff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #251644;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-violet-dark);
+}
+
+/* Focus States */
+:focus-visible {
+  outline: 2px solid var(--color-violet-light);
+  outline-offset: 3px;
+}
+
+/* Link and Button resets */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
