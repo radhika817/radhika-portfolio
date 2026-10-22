@@ -319,7 +319,14 @@ body.custom-cursor-active select {
   .desktop-nav {
     display: none !important;
   }
+  .desktop-resume-btn {
+    display: none !important;
+  }
+  .mobile-hamburger-btn {
+    display: flex !important;
+  }
 }
+
 
 
 
