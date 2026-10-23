@@ -15,8 +15,9 @@ import { useActiveSection } from './hooks/useActiveSection'
 import About from './components/About'
 import Projects from './components/Projects'
 import Skills from './components/Skills'
+import Experience from './components/Experience'
 
-const SECTION_IDS = ['about', 'projects', 'skills', 'achievements', 'terminal', 'contact']
+const SECTION_IDS = ['about', 'projects', 'skills', 'experience', 'achievements', 'terminal', 'contact']
 
 export default function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false)
@@ -121,6 +122,9 @@ export default function App() {
 
         {/* Section: Technical Skills */}
         <Skills />
+
+        {/* Section: Experience Timeline */}
+        <Experience />
 
         {/* Section: Achievements Skeleton */}
         <section
