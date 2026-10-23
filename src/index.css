@@ -376,6 +376,69 @@ body.custom-cursor-active select {
   transform: translateY(-2px);
 }
 
+/* Responsive Polish: Skills, Experience, Achievements */
+@media (max-width: 768px) {
+  .skills-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  .skill-category-card {
+    padding: 1.25rem !important;
+  }
+
+  /* Timeline mobile adjustments */
+  .timeline-container {
+    padding-left: 1.25rem !important;
+  }
+
+  .timeline-vertical-line {
+    left: 7px !important;
+  }
+
+  .timeline-item {
+    padding-left: 1.25rem !important;
+  }
+
+  .timeline-node {
+    left: -1.25rem !important;
+    width: 18px !important;
+    height: 18px !important;
+    top: 0.35rem !important;
+  }
+
+  .timeline-node > div {
+    width: 6px !important;
+    height: 6px !important;
+  }
+
+  .timeline-card {
+    padding: 1.25rem !important;
+  }
+
+  /* Achievements mobile adjustments */
+  .achievements-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  .achievement-card {
+    padding: 1.25rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .tech-marquee-track {
+    gap: 0.65rem !important;
+  }
+
+  .tech-marquee-container {
+    mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  }
+}
+
+
 
 
 

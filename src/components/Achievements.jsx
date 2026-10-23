@@ -201,7 +201,7 @@ export default function Achievements() {
         transition={{ duration: 0.5, delay: 0.1 }}
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))',
           gap: '1rem',
           marginBottom: '2.5rem',
         }}
@@ -324,7 +324,7 @@ export default function Achievements() {
         viewport={{ once: true, margin: '-40px' }}
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
           gap: '1.5rem',
         }}
       >
