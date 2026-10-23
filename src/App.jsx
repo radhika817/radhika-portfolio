@@ -18,6 +18,7 @@ import Skills from './components/Skills'
 import Experience from './components/Experience'
 import Achievements from './components/Achievements'
 import Terminal from './components/Terminal'
+import Contact from './components/Contact'
 
 const SECTION_IDS = ['about', 'projects', 'skills', 'experience', 'achievements', 'terminal', 'contact']
 
@@ -135,56 +136,8 @@ export default function App() {
         {/* Section: Interactive Terminal */}
         <Terminal />
 
-        {/* Section: Contact Skeleton */}
-        <section
-          id="contact"
-          style={{
-            padding: '3.5rem 0 2rem',
-            scrollMarginTop: '80px',
-          }}
-        >
-          <div
-            style={{
-              display: 'inline-block',
-              color: 'var(--color-violet-light)',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.85rem',
-              marginBottom: '0.5rem',
-            }}
-          >
-            // 06. CONNECT
-          </div>
-          <h2
-            style={{
-              fontSize: '2rem',
-              marginBottom: '1rem',
-              color: 'var(--text-primary)',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Get In Touch
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginBottom: '1.5rem' }}>
-            Open for software engineering internships, collaborative projects, and tech opportunities.
-          </p>
-          <a
-            href={`mailto:${personalInfo.email}`}
-            data-cursor="Open"
-            style={{
-              display: 'inline-flex',
-              padding: '0.85rem 1.6rem',
-              borderRadius: 'var(--radius-full)',
-              background: 'linear-gradient(135deg, var(--color-violet), #6d28d9)',
-              color: '#ffffff',
-              fontWeight: 600,
-              fontSize: '0.95rem',
-              boxShadow: '0 0 24px rgba(139, 92, 246, 0.4)',
-              textDecoration: 'none',
-            }}
-          >
-            {personalInfo.email}
-          </a>
-        </section>
+        {/* Section: Contact & Socials */}
+        <Contact />
       </main>
     </div>
   )
