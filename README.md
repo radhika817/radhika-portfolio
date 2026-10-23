@@ -11,46 +11,40 @@ I'm Radhika Kandalkar, a Computer Engineering student at **MIT Academy of Engine
 
 This portfolio helps recruiters and engineering teams quickly understand what I've built, the problems each project solves, and the technical decisions behind the work.
 
-## Experience Overview (Animation & Interaction Spec)
+## Features & Architecture Overview
 
-### 1. First Page (Hero) — Avatar Landing
-- Full-screen hero with the **3D developer avatar** front and center (right side on desktop, top on mobile).
-- Avatar subtly **follows the cursor** (head/body tilt via parallax or Three.js look-at) and floats with an idle animation.
-- Intro text types in line by line: name, role ("Full-Stack Developer · AI · Web3"), and a short tagline.
-- Animated gradient/aurora glow behind the avatar, floating particles, and a faint grid.
-- Primary CTAs: **View Projects**, **Download Resume**, **Contact Me**, with magnetic hover effect.
-- Scroll indicator that pulses at the bottom.
-- Preloader/intro animation (name reveal, then the hero slides in).
+### 1. Hero Landing & 3D Interactive Avatar
+- **Interactive 3D Avatar:** Pixel-art developer avatar featuring real-time perspective tilt tracking the cursor, continuous idle float physics, dynamic holographic glare, and an animated violet aurora backdrop.
+- **Typewriter Role Introduction:** Snappy role line ("Full-Stack Developer · AI · Web3") with blinking caret and availability status badge ("Available for Opportunities & Internships").
+- **Magnetic CTAs:** Primary call-to-actions ("View Projects", "Download Resume", "Contact Me") with smooth magnetic pull springs.
+- **Interactive Preloader:** Initial brand intro animation with percentage reveal counter and smooth curtain-reveal transition.
+- **Scroll Indicator:** Pulsing scroll pill guiding visitors toward featured work.
 
-### 2. Cursor Effects (site-wide)
-- **Custom cursor:** small dot + larger trailing ring with smooth spring physics (hidden on touch devices).
-- **Cursor glow:** soft violet radial spotlight following the pointer across the background.
-- **Hover states:** ring expands and shows labels such as "View", "Open", "Drag" over cards, links, and buttons.
-- **Magnetic buttons:** buttons gently pull toward the cursor.
-- **Particle trail (optional):** short-lived violet sparkles behind fast cursor movement.
-- **Spotlight cards:** project cards reveal a border glow that tracks the cursor, plus subtle 3D tilt.
-- **Click ripple:** a small pulse animation on click.
+### 2. Spatial Cursor & Particle FX
+- **Custom Dual Cursor:** Ultra-responsive center dot and trailing ring driven by Framer Motion springs, auto-disabled on touch devices.
+- **Contextual Hover Badges:** Trailing ring smoothly morphs and displays action labels ("View", "Open", "Drag", "Copy") when hovering interactive components.
+- **Ambient Spotlight Glow:** Soft 600px violet radial glow tracking the cursor across the background with spring smoothing.
+- **Particle Trail:** High-performance HTML5 canvas particle engine emitting short-lived violet sparkles on rapid mouse gestures with capped particle pools and zero idle CPU usage.
+- **Click Ripple:** Expanding geometric ripple pulses triggered globally on click.
 
-### 3. Page Motion
-- Smooth inertial scrolling (Lenis).
-- Section reveals, staggered text animations, and scroll-linked parallax.
-- Animated skill chips/marquee, counters for stats (e.g., 198 questions, 500+ participants).
-- Page transitions between home and project case-study pages.
-- Animated scroll progress bar and active-section navbar highlighting.
+### 3. Navigation & Smooth Motion
+- **Lenis Smooth Scroll:** Synchronized with GSAP ScrollTrigger for consistent momentum scrolling.
+- **Glassmorphism Navbar:** Fixed blurred navigation header with brand monogram "RK", section anchor links, and active section spy highlighting.
+- **Top Scroll Progress Bar:** Gradient violet scroll progress indicator tracking page position.
+- **Mobile Menu Drawer:** Animated slide-in glass navigation menu with accessible focus trap and keyboard navigation.
 
-### 4. Interactive Features
-- **Portfolio terminal:** type `help`, `projects`, `skills`, `achievements`, `contact`, `resume` to explore.
-- Interactive project cards with hover previews and detailed case studies.
-- Achievements timeline with animated entries.
-- Optional easter eggs (Konami code, theme accent switcher).
+### 4. Interactive Terminal & Deep Case Studies
+- **Interactive Unix Terminal:** Styled bash terminal with traffic light controls, command history (up/down arrow navigation), tab completion, typing animation for outputs, and dynamic theme switching (`theme` toggles between Violet, Cyan, Emerald, Amber, and Rose).
+- **Engineering Case Study Modals:** Full-screen modal dialogues for SmartRide, PrepPulse, and Socio3 detailing Problem Statement, Approach, Architecture Decisions, and Stack, equipped with Escape key dismissal and focus trapping.
+- **Stat Counters & Timeline:** Verified academic stats at MIT AOE (CGPA 8.51/10, 198 questions, 500+ participants) and vertical experience timeline for Cisco Networking Academy and LaunchEd Global EdTech.
+- **Infinite Tech Marquee:** Continuous marquee row showcasing core engineering technologies.
+- **Contact & Feedback:** Direct communication hub with instant clipboard email copy (with toast notification) and interactive mailto composer form.
 
 ### 5. Accessibility & Performance
-- `prefers-reduced-motion` disables heavy effects (custom cursor, particles, parallax).
-- Keyboard navigation and visible focus states; native cursor restored on touch/coarse pointers.
-- Lazy-loaded 3D assets, compressed avatar model, and fallback static avatar image.
-- Responsive layouts for desktop, tablet, and mobile.
-
-The 3D avatar is a visual representation. It should not be presented as a real photograph.
+- **Reduced Motion Support:** Respects `prefers-reduced-motion: reduce` by disabling cursor effects, particles, 3D tilt, and parallax without layout shift.
+- **Lazy Loading & Code-Splitting:** Dynamic `React.lazy()` chunking for `Avatar3D` and below-the-fold sections, paired with manual vendor chunking in Vite.
+- **Optimized Assets:** WebP image optimization with explicit dimensions and requestAnimationFrame (rAF) throttled mouse listeners.
+- **Keyboard Landmarks & Focus Rings:** Semantic landmark elements, skip-to-content anchor, and visible high-contrast focus rings.
 
 ## Featured Projects
 
@@ -121,85 +115,101 @@ A Web3 social platform featuring IPFS-based content storage, wallet authenticati
 
 ## Tech Stack
 
--   **Framework:** React + Vite
--   **Animation:** Framer Motion (UI/section motion), GSAP + ScrollTrigger (scroll-driven sequences)
--   **Smooth scroll:** Lenis
--   **3D avatar:** React Three Fiber + drei (Three.js), loading a `.glb` model, with a static PNG fallback
--   **Cursor effects:** Custom React cursor component (Framer Motion springs) + canvas/CSS particle trail
--   **Icons:** Lucide React
--   **Styling:** Tailwind CSS or CSS variables with a consistent violet design system
--   **Deployment:** Vercel
+- **Framework:** React 19 + Vite 6 (JavaScript)
+- **Animation & Physics:** Framer Motion (spring transitions, 3D tilt, case study modal), GSAP + ScrollTrigger (scroll timeline sync)
+- **Smooth Scroll:** Lenis smooth inertial scrolling
+- **Avatar & Visuals:** 3D perspective card tilt with cursor tracking, holographic glare, and optimized WebP/PNG assets
+- **Interactive Cursor FX:** Dual-ring spring cursor with contextual labels, soft 600px radial glow spotlight, and HTML5 canvas particle trail
+- **Terminal Emulator:** Custom bash terminal engine with command history, tab-completion, and live theme palette switching
+- **Icons:** Lucide React
+- **Styling:** Vanilla CSS with "Violet After Dark" design tokens (CSS custom properties, glassmorphism, responsive utilities)
+- **Deployment & Edge:** Vercel SPA routing & immutable cache headers
 
 ## Getting Started
 
 ### Prerequisites
 
-Install a supported version of Node.js and npm.
+- Node.js (version 18+ recommended)
+- npm or pnpm / yarn
 
-### Install and run locally
+### Run Locally
 
-``` bash
-npm create vite@latest radhika-portfolio -- --template react
+```bash
+# Clone the repository
+git clone https://github.com/radhika817/radhika-portfolio.git
 cd radhika-portfolio
+
+# Install dependencies
 npm install
-npm install framer-motion gsap lenis lucide-react three @react-three/fiber @react-three/drei
+
+# Start Vite development server
 npm run dev
 ```
 
-Open the local URL printed in your terminal, commonly `http://localhost:5173`.
+Open the local address printed in your terminal (typically `http://localhost:5173`).
 
-### Suggested project structure
+### Project Structure
 
-``` text
+```text
 radhika-portfolio/
 ├── public/
-│   ├── models/
-│   │   └── avatar.glb
+│   ├── favicon.svg             # Violet After Dark monogram favicon
 │   ├── images/
-│   │   └── avatar.png          # static fallback
-│   └── resume.pdf
+│   │   ├── avatar.png          # Fallback avatar
+│   │   └── avatar.webp         # Compressed WebP avatar
+│   ├── models/                 # 3D model assets
+│   └── resume.pdf              # Developer resume
 ├── src/
 │   ├── components/
-│   │   ├── Preloader.jsx
-│   │   ├── CustomCursor.jsx
-│   │   ├── CursorGlow.jsx
-│   │   ├── ParticleTrail.jsx
-│   │   ├── MagneticButton.jsx
-│   │   ├── Navbar.jsx
-│   │   ├── Hero.jsx
-│   │   ├── Avatar3D.jsx
-│   │   ├── Projects.jsx
-│   │   ├── ProjectCard.jsx
-│   │   ├── Skills.jsx
-│   │   ├── Achievements.jsx
-│   │   ├── Terminal.jsx
-│   │   └── Contact.jsx
+│   │   ├── About.jsx           # Bio & animated stat counters
+│   │   ├── Achievements.jsx    # Hackathon awards & counters
+│   │   ├── Avatar3D.jsx        # 3D interactive avatar
+│   │   ├── ClickRipple.jsx     # Global click ripple pulses
+│   │   ├── Contact.jsx         # Direct contact hub & mailto form
+│   │   ├── CursorGlow.jsx      # Ambient radial spotlight
+│   │   ├── CustomCursor.jsx    # Dual-ring cursor with labels
+│   │   ├── Experience.jsx      # Vertical timeline
+│   │   ├── Footer.jsx          # Philosophy quote & back-to-top
+│   │   ├── Hero.jsx            # Hero layout & typing intro
+│   │   ├── MagneticButton.jsx  # Spring magnetic wrapper
+│   │   ├── MobileMenu.jsx      # Slide-out glass drawer
+│   │   ├── Navbar.jsx          # Fixed glassmorphic navigation
+│   │   ├── ParticleTrail.jsx   # Canvas particle sparkles
+│   │   ├── Preloader.jsx       # Introductory reveal sequence
+│   │   ├── ProjectCard.jsx     # Spotlight cards with 3D tilt
+│   │   ├── ProjectCaseStudyModal.jsx # Deep-dive modal
+│   │   ├── Projects.jsx        # Featured projects grid
+│   │   ├── ScrollProgressBar.jsx # Viewport scroll indicator
+│   │   ├── Skills.jsx          # Skill chips & infinite tech marquee
+│   │   └── Terminal.jsx        # Interactive Unix terminal
 │   ├── data/
-│   │   └── content.js          # projects, skills, achievements
+│   │   └── content.js          # Structured portfolio content
 │   ├── hooks/
-│   │   ├── useMousePosition.js
-│   │   └── useReducedMotion.js
-│   ├── App.jsx
-│   ├── index.css
-│   └── main.jsx
-├── index.html
+│   │   ├── useActiveSection.js # IntersectionObserver nav spy
+│   │   ├── useMousePosition.js # Throttled mouse position hook
+│   │   ├── usePointerType.js   # Fine vs coarse device detection
+│   │   ├── useReducedMotion.js # prefers-reduced-motion listener
+│   │   └── useSmoothScroll.js  # Lenis + GSAP sync hook
+│   ├── App.jsx                 # Application root & lazy split views
+│   ├── index.css               # Design tokens, reset & responsive media
+│   └── main.jsx                # React DOM entrypoint
+├── index.html                  # SEO tags, OG metadata, fonts
 ├── package.json
+├── vercel.json                 # Vercel SPA routing configuration
 └── README.md
 ```
 
-## Build Plan 
+## Built Implementation Stages
 
-Build in small, reviewable stages. Give Antigravity one stage at a time and check the result in the browser before moving on.
-
-1.  **Setup:** Scaffold Vite + React, install dependencies, set up the violet design tokens (colors, fonts, spacing) in `index.css`.
-2.  **Cursor system:** `CustomCursor`, `CursorGlow`, hover-state labels, reduced-motion and touch fallbacks.
-3.  **Hero + avatar:** Preloader, hero layout, `Avatar3D` with cursor-follow, aurora glow, particles, typing intro.
-4.  **Navbar + smooth scroll:** Lenis, scroll progress bar, active-section highlighting.
-5.  **Projects:** Spotlight/tilt cards, hover previews, case-study pages.
-6.  **Skills, achievements, experience:** Animated chips, counters, timeline.
-7.  **Terminal + contact:** Command-based terminal, contact form or links.
-8.  **Polish:** Accessibility, mobile layouts, performance (lazy-load 3D), SEO meta tags.
-9.  **Deploy:** Vercel.
+1. **Stage 1 (Setup):** Repository scaffold, dependencies, and Violet After Dark design tokens.
+2. **Stage 2 (Cursor System):** Spring cursor, dynamic labels, radial spotlight, canvas sparkles, and click ripple.
+3. **Stage 3 (Hero & Avatar):** Preloader sequence, hero layout with typewriter intro, magnetic CTAs, and 3D avatar.
+4. **Stage 4 (Navigation & Smooth Scroll):** Lenis smooth scroll, glass navbar, mobile menu drawer, and active section spy.
+5. **Stage 5 (Projects):** Spotlight border glow, 3D tilt physics, architecture case study modals, and link fallbacks.
+6. **Stage 6 (Skills, Experience, Achievements):** Categorized chips, infinite tech marquee, experience timeline, and counters.
+7. **Stage 7 (Terminal & Contact):** Interactive bash terminal with tab-completion and themes, contact hub, and footer.
+8. **Stage 8 (Polish):** Full keyboard accessibility, reduced-motion compliance, lazy code-splitting, rAF throttling, and responsive pass.
+9. **Stage 9 (Deployment):** Vercel SPA configuration, asset caching, and production deployment documentation.
 
 
 Built with curiosity, iteration, and a focus on solving real problems.
