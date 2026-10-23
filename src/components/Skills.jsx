@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   Code2,
@@ -8,6 +9,7 @@ import {
   Cloud,
   Binary,
   Sparkles,
+  Zap,
 } from 'lucide-react'
 import { skillsData } from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
@@ -78,11 +80,109 @@ export const SKILL_CATEGORIES = [
   },
 ]
 
+// Prominent core technologies for the infinite marquee
+export const MARQUEE_ITEMS = [
+  { name: 'React', category: 'Frontend', color: '#61dafb' },
+  { name: 'Solidity', category: 'Smart Contracts', color: '#fbbf24' },
+  { name: 'Groq LLM', category: 'AI Inference', color: '#f97316' },
+  { name: 'Node.js', category: 'Backend', color: '#68a063' },
+  { name: 'Express.js', category: 'REST API', color: '#ffffff' },
+  { name: 'MongoDB', category: 'Database', color: '#47a248' },
+  { name: 'Hardhat', category: 'Web3 Tooling', color: '#eab308' },
+  { name: 'Ethers.js', category: 'Blockchain', color: '#3b82f6' },
+  { name: 'IPFS', category: 'Decentralized Storage', color: '#06b6d4' },
+  { name: 'Python', category: 'Language', color: '#38bdf8' },
+  { name: 'Firebase', category: 'Realtime DB', color: '#f59e0b' },
+  { name: 'Socket.IO', category: 'WebSockets', color: '#a855f7' },
+  { name: 'AWS', category: 'Cloud Infrastructure', color: '#ec4899' },
+  { name: 'C++', category: 'Algorithms', color: '#60a5fa' },
+  { name: 'MySQL', category: 'Relational DB', color: '#00758f' },
+  { name: 'Tailwind CSS', category: 'Styling', color: '#38bdf8' },
+  { name: 'Leaflet', category: 'Geospatial Maps', color: '#10b981' },
+]
+
 /**
- * Skills Section with grouped categories derived directly from README.md.
+ * Infinite Tech Marquee Row
+ */
+function TechMarquee() {
+  // Duplicate array twice to ensure seamless continuous loop
+  const marqueeList = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
+
+  return (
+    <div
+      style={{
+        margin: '2.5rem 0 3.5rem',
+        padding: '1rem 0',
+        background: 'rgba(13, 7, 24, 0.4)',
+        borderTop: '1px solid rgba(139, 92, 246, 0.12)',
+        borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
+        borderRadius: 'var(--radius-md)',
+      }}
+    >
+      <div className="tech-marquee-container" data-cursor="Drag">
+        <div className="tech-marquee-track">
+          {marqueeList.map((item, idx) => (
+            <div
+              key={`${item.name}-${idx}`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                padding: '0.55rem 1.1rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'rgba(19, 11, 36, 0.8)',
+                border: '1px solid rgba(139, 92, 246, 0.2)',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <span
+                style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  background: item.color,
+                  boxShadow: `0 0 8px ${item.color}`,
+                  display: 'inline-block',
+                }}
+              />
+              <span
+                style={{
+                  color: 'var(--text-primary)',
+                  fontWeight: 600,
+                  fontSize: '0.88rem',
+                  letterSpacing: '0.01em',
+                }}
+              >
+                {item.name}
+              </span>
+              <span
+                style={{
+                  color: 'var(--text-faint)',
+                  fontSize: '0.72rem',
+                  fontFamily: 'var(--font-mono)',
+                  borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+                  paddingLeft: '0.5rem',
+                }}
+              >
+                {item.category}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Skills Section with grouped categories, animated hover glow chips,
+ * and an infinite tech marquee row.
  */
 export default function Skills() {
   const prefersReducedMotion = useReducedMotion()
+  const [hoveredChip, setHoveredChip] = useState(null)
 
   return (
     <section
@@ -99,7 +199,7 @@ export default function Skills() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-40px' }}
         transition={{ duration: 0.5 }}
-        style={{ marginBottom: '3rem' }}
+        style={{ marginBottom: '1.5rem' }}
       >
         <div
           style={{
@@ -140,6 +240,9 @@ export default function Skills() {
         </p>
       </motion.div>
 
+      {/* Infinite Tech Marquee Row */}
+      <TechMarquee />
+
       {/* Grouped Categories Grid */}
       <div
         className="skills-grid"
@@ -152,9 +255,13 @@ export default function Skills() {
         {SKILL_CATEGORIES.map((category) => {
           const IconComponent = category.icon
           return (
-            <div
+            <motion.div
               key={category.id}
               className="skill-category-card"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.45 }}
               style={{
                 position: 'relative',
                 background: 'rgba(19, 11, 36, 0.65)',
@@ -232,7 +339,7 @@ export default function Skills() {
                   </span>
                 </div>
 
-                {/* Skill Chips */}
+                {/* Skill Chips with Hover Glow and Motion */}
                 <div
                   style={{
                     display: 'flex',
@@ -240,28 +347,51 @@ export default function Skills() {
                     gap: '0.5rem',
                   }}
                 >
-                  {category.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="skill-chip"
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        fontSize: '0.85rem',
-                        padding: '0.4rem 0.75rem',
-                        borderRadius: 'var(--radius-sm)',
-                        background: 'rgba(255, 255, 255, 0.04)',
-                        color: 'var(--text-secondary)',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
-                        transition: 'all 0.2s ease',
-                      }}
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                  {category.skills.map((skill) => {
+                    const isHovered = hoveredChip === skill
+                    return (
+                      <motion.span
+                        key={skill}
+                        className="skill-chip"
+                        data-cursor="View"
+                        onMouseEnter={() => setHoveredChip(skill)}
+                        onMouseLeave={() => setHoveredChip(null)}
+                        whileHover={
+                          prefersReducedMotion
+                            ? {}
+                            : { y: -2, scale: 1.04 }
+                        }
+                        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          fontSize: '0.85rem',
+                          padding: '0.42rem 0.8rem',
+                          borderRadius: 'var(--radius-sm)',
+                          background: isHovered
+                            ? 'rgba(139, 92, 246, 0.18)'
+                            : 'rgba(255, 255, 255, 0.04)',
+                          color: isHovered
+                            ? '#ffffff'
+                            : 'var(--text-secondary)',
+                          border: `1px solid ${
+                            isHovered
+                              ? 'rgba(167, 139, 250, 0.55)'
+                              : 'rgba(255, 255, 255, 0.08)'
+                          }`,
+                          boxShadow: isHovered
+                            ? `0 0 16px ${category.accent}44`
+                            : 'none',
+                          userSelect: 'none',
+                        }}
+                      >
+                        {skill}
+                      </motion.span>
+                    )
+                  })}
                 </div>
               </div>
-            </div>
+            </motion.div>
           )
         })}
       </div>
