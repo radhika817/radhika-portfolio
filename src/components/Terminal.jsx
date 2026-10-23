@@ -1,11 +1,131 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Terminal as TerminalIcon, Sparkles } from 'lucide-react'
+import {
+  personalInfo,
+  projects,
+  skillsData,
+  achievements,
+  experience,
+  contactInfo,
+} from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 
+export const AVAILABLE_COMMANDS = [
+  'help',
+  'about',
+  'projects',
+  'skills',
+  'achievements',
+  'experience',
+  'contact',
+  'resume',
+  'clear',
+]
+
 /**
- * Terminal UI Window with macOS/Linux traffic light controls,
- * terminal header, auto-focus on click, and styled prompt input.
+ * Executes a terminal command string and returns output text.
+ */
+function executeCommand(rawCommand) {
+  const cmd = rawCommand.trim().toLowerCase()
+
+  switch (cmd) {
+    case 'help':
+      return [
+        'Available Developer Commands:',
+        '  about         Display bio, education, and background',
+        '  projects      List full-stack & Web3 engineering projects',
+        '  skills        Show technical skills and category breakdown',
+        '  achievements  List hackathon awards and competition rankings',
+        '  experience    Show professional internships and campus outreach',
+        '  contact       Get email, location, and social profile links',
+        '  resume        Open resume document (/resume.pdf)',
+        '  clear         Clear the terminal screen buffer',
+        '  help          Display this help manual',
+      ].join('\n')
+
+    case 'about':
+    case 'bio':
+      return [
+        `${personalInfo.name} — ${personalInfo.title}`,
+        `${personalInfo.tagline}`,
+        '',
+        `Education: ${personalInfo.education.degree}`,
+        `Institution: ${personalInfo.education.institution} (${personalInfo.education.period})`,
+        `CGPA: ${personalInfo.education.cgpa}`,
+        `Location: ${personalInfo.location}`,
+        '',
+        personalInfo.bio,
+      ].join('\n')
+
+    case 'projects':
+      return projects
+        .map(
+          (p, i) =>
+            `[${i + 1}] ${p.title} — ${p.subtitle}\n` +
+            `    Tech: ${p.tech.join(', ')}\n` +
+            `    Summary: ${p.tagline}\n` +
+            `    Live Demo: ${p.liveUrl || 'Coming soon'}\n` +
+            (p.award ? `    Award: ★ ${p.award}\n` : '')
+        )
+        .join('\n')
+
+    case 'skills':
+      return [
+        'Technical Skills Breakdown:',
+        `  • Languages:        ${skillsData.languages.join(', ')}`,
+        `  • Web Development:  ${skillsData.webDevelopment.join(', ')}`,
+        `  • Blockchain/Web3:  ${skillsData.blockchainWeb3.join(', ')}`,
+        `  • AI Integrations:  ${skillsData.aiIntegrations.join(', ')}`,
+        `  • Databases:        ${skillsData.databases.join(', ')}`,
+        `  • Cloud & Tools:    ${skillsData.cloudTools.join(', ')}`,
+        `  • Computer Science: ${skillsData.computerScience.join(', ')}`,
+      ].join('\n')
+
+    case 'achievements':
+    case 'honors':
+      return [
+        'Awards & Competitive Recognition:',
+        ...achievements.map((a) =>
+          a.highlight
+            ? `  ★ ${a.title}\n    ${a.description}`
+            : `  • ${a.title}\n    ${a.description}`
+        ),
+      ].join('\n')
+
+    case 'experience':
+      return [
+        'Work & Leadership Experience:',
+        ...experience.map(
+          (e) =>
+            `  • ${e.role} @ ${e.organization} (${e.period})\n` +
+            e.responsibilities.map((r) => `      - ${r}`).join('\n')
+        ),
+      ].join('\n')
+
+    case 'contact':
+      return [
+        'Contact & Communication:',
+        `  Email:    ${contactInfo.email}`,
+        `  Location: ${contactInfo.location}`,
+        `  GitHub:   https://github.com/radhika817`,
+        `  Profiles: LinkedIn, LeetCode, CodeChef (links on contact card)`,
+      ].join('\n')
+
+    case 'resume':
+      if (typeof window !== 'undefined') {
+        window.open('/resume.pdf', '_blank')
+      }
+      return 'Opening /resume.pdf in a new tab... [Done]'
+
+    default:
+      return `bash: command not found: "${rawCommand}". Type "help" to view available developer commands.`
+  }
+}
+
+/**
+ * Terminal UI Window with core commands (help, about, projects, skills,
+ * achievements, contact, resume, clear, and unknown command handling).
  */
 export default function Terminal() {
   const [inputVal, setInputVal] = useState('')
@@ -17,6 +137,7 @@ export default function Terminal() {
   ])
   const inputRef = useRef(null)
   const windowRef = useRef(null)
+  const bottomRef = useRef(null)
   const prefersReducedMotion = useReducedMotion()
 
   const handleWindowClick = () => {
@@ -25,15 +146,29 @@ export default function Terminal() {
     }
   }
 
+  // Auto-scroll terminal output to bottom
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [history])
+
   const handleSubmit = (e) => {
     e.preventDefault()
     const trimmed = inputVal.trim()
     if (!trimmed) return
 
+    if (trimmed.toLowerCase() === 'clear') {
+      setHistory([])
+      setInputVal('')
+      return
+    }
+
+    const output = executeCommand(trimmed)
     setHistory((prev) => [
       ...prev,
       { type: 'input', text: trimmed },
-      { type: 'output', text: `Command received: "${trimmed}". Commands will be enabled in next step.` },
+      { type: 'output', text: output },
     ])
     setInputVal('')
   }
@@ -183,7 +318,7 @@ export default function Terminal() {
               border: '1px solid rgba(139, 92, 246, 0.2)',
             }}
           >
-            UTF-8
+            Type &quot;help&quot;
           </div>
         </div>
 
@@ -223,7 +358,13 @@ export default function Terminal() {
                   {entry.text}
                 </div>
               ) : (
-                <div style={{ color: 'var(--text-secondary)', whiteSpace: 'pre-line', paddingLeft: '0.25rem' }}>
+                <div
+                  style={{
+                    color: entry.text.startsWith('bash:') ? '#f87171' : 'var(--text-secondary)',
+                    whiteSpace: 'pre-line',
+                    paddingLeft: '0.25rem',
+                  }}
+                >
                   {entry.text}
                 </div>
               )}
@@ -264,6 +405,7 @@ export default function Terminal() {
               }}
             />
           </form>
+          <div ref={bottomRef} />
         </div>
       </motion.div>
     </section>
