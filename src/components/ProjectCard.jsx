@@ -185,7 +185,7 @@ function ProjectVisualBanner({ project }) {
  */
 export default function ProjectCard({ project, onOpenCaseStudy }) {
   const cardRef = useRef(null)
-  const [mousePos, setMousePos] = useState({ x: -250, y: -250 })
+  const rafRef = useRef(null)
   const [isHovered, setIsHovered] = useState(false)
   const prefersReducedMotion = useReducedMotion()
   const { hasFinePointer } = usePointerType()
@@ -199,20 +199,36 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
 
   const handleMouseMove = (e) => {
     if (prefersReducedMotion || !hasFinePointer || !cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    const relX = e.clientX - rect.left
-    const relY = e.clientY - rect.top
+    const clientX = e.clientX
+    const clientY = e.clientY
 
-    setMousePos({ x: relX, y: relY })
-    tiltX.set(relX / rect.width - 0.5)
-    tiltY.set(relY / rect.height - 0.5)
+    if (rafRef.current) return
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null
+      if (!cardRef.current) return
+      const rect = cardRef.current.getBoundingClientRect()
+      const relX = clientX - rect.left
+      const relY = clientY - rect.top
+
+      cardRef.current.style.setProperty('--glow-x', `${relX}px`)
+      cardRef.current.style.setProperty('--glow-y', `${relY}px`)
+      tiltX.set(relX / rect.width - 0.5)
+      tiltY.set(relY / rect.height - 0.5)
+    })
   }
 
   const handleMouseEnter = () => setIsHovered(true)
 
   const handleMouseLeave = () => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
+    }
     setIsHovered(false)
-    setMousePos({ x: -250, y: -250 })
+    if (cardRef.current) {
+      cardRef.current.style.setProperty('--glow-x', '-250px')
+      cardRef.current.style.setProperty('--glow-y', '-250px')
+    }
     tiltX.set(0)
     tiltY.set(0)
   }
@@ -252,7 +268,8 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
               position: 'absolute',
               inset: 0,
               borderRadius: 'var(--radius-lg)',
-              background: `radial-gradient(380px circle at ${mousePos.x}px ${mousePos.y}px, rgba(196, 181, 253, 0.65), rgba(139, 92, 246, 0.3) 40%, transparent 75%)`,
+              background:
+                'radial-gradient(380px circle at var(--glow-x, -250px) var(--glow-y, -250px), rgba(196, 181, 253, 0.65), rgba(139, 92, 246, 0.3) 40%, transparent 75%)',
               opacity: isHovered ? 1 : 0,
               transition: 'opacity 0.25s ease',
               pointerEvents: 'none',
@@ -298,7 +315,8 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: `radial-gradient(420px circle at ${mousePos.x}px ${mousePos.y}px, rgba(139, 92, 246, 0.1), transparent 65%)`,
+                background:
+                  'radial-gradient(420px circle at var(--glow-x, -250px) var(--glow-y, -250px), rgba(139, 92, 246, 0.1), transparent 65%)',
                 opacity: isHovered ? 1 : 0,
                 transition: 'opacity 0.25s ease',
                 pointerEvents: 'none',

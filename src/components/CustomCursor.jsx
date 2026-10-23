@@ -36,13 +36,26 @@ export default function CustomCursor() {
 
     document.body.classList.add('custom-cursor-active')
 
+    let rafId = null
+
     const handleMouseMove = (e) => {
-      mouseX.set(e.clientX)
-      mouseY.set(e.clientY)
-      if (!isVisible) setIsVisible(true)
+      if (rafId) return
+      const clientX = e.clientX
+      const clientY = e.clientY
+
+      rafId = requestAnimationFrame(() => {
+        mouseX.set(clientX)
+        mouseY.set(clientY)
+        setIsVisible(true)
+        rafId = null
+      })
     }
 
     const handleMouseLeave = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+        rafId = null
+      }
       setIsVisible(false)
     }
 
@@ -116,6 +129,7 @@ export default function CustomCursor() {
     document.addEventListener('mouseenter', handleMouseEnter)
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId)
       document.body.classList.remove('custom-cursor-active')
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mousedown', handleMouseDown)
@@ -125,7 +139,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseleave', handleMouseLeave)
       document.removeEventListener('mouseenter', handleMouseEnter)
     }
-  }, [hasFinePointer, prefersReducedMotion, isVisible, mouseX, mouseY])
+  }, [hasFinePointer, prefersReducedMotion, mouseX, mouseY])
 
   if (!hasFinePointer || prefersReducedMotion) {
     return null

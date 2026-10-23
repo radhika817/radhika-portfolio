@@ -23,15 +23,27 @@ export default function Avatar3D() {
   useEffect(() => {
     if (prefersReducedMotion) return
 
+    let rafId = null
+
     const handleMouseMove = (e) => {
-      const { innerWidth, innerHeight } = window
-      // Normalize pointer between -0.5 and 0.5
-      mouseX.set(e.clientX / innerWidth - 0.5)
-      mouseY.set(e.clientY / innerHeight - 0.5)
+      if (rafId) return
+      const clientX = e.clientX
+      const clientY = e.clientY
+
+      rafId = requestAnimationFrame(() => {
+        const { innerWidth, innerHeight } = window
+        // Normalize pointer between -0.5 and 0.5
+        mouseX.set(clientX / innerWidth - 0.5)
+        mouseY.set(clientY / innerHeight - 0.5)
+        rafId = null
+      })
     }
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
   }, [mouseX, mouseY, prefersReducedMotion])
 
   return (
@@ -92,18 +104,25 @@ export default function Avatar3D() {
               background: '#0d0718',
             }}
           >
-            <img
-              src="/images/avatar.png"
-              alt="Radhika Kandalkar — Developer Avatar"
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'block',
-                imageRendering: 'pixelated',
-                transform: 'scale(1.01)',
-                transition: 'transform 0.3s ease',
-              }}
-            />
+            <picture>
+              <source srcSet="/images/avatar.webp" type="image/webp" />
+              <img
+                src="/images/avatar.png"
+                alt="Radhika Kandalkar — Developer Avatar"
+                width="430"
+                height="430"
+                loading="eager"
+                decoding="async"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  display: 'block',
+                  imageRendering: 'pixelated',
+                  transform: 'scale(1.01)',
+                  transition: 'transform 0.3s ease',
+                }}
+              />
+            </picture>
 
             {/* Subtle holographic sheen following cursor */}
             {!prefersReducedMotion && (

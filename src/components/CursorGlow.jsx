@@ -22,13 +22,26 @@ export default function CursorGlow() {
   useEffect(() => {
     if (!hasFinePointer || prefersReducedMotion) return
 
+    let rafId = null
+
     const handleMouseMove = (e) => {
-      mouseX.set(e.clientX)
-      mouseY.set(e.clientY)
-      if (!isVisible) setIsVisible(true)
+      if (rafId) return
+      const clientX = e.clientX
+      const clientY = e.clientY
+
+      rafId = requestAnimationFrame(() => {
+        mouseX.set(clientX)
+        mouseY.set(clientY)
+        setIsVisible(true)
+        rafId = null
+      })
     }
 
     const handleMouseLeave = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+        rafId = null
+      }
       setIsVisible(false)
     }
 
@@ -41,11 +54,12 @@ export default function CursorGlow() {
     document.addEventListener('mouseenter', handleMouseEnter)
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId)
       window.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseleave', handleMouseLeave)
       document.removeEventListener('mouseenter', handleMouseEnter)
     }
-  }, [hasFinePointer, prefersReducedMotion, isVisible, mouseX, mouseY])
+  }, [hasFinePointer, prefersReducedMotion, mouseX, mouseY])
 
   if (!hasFinePointer || prefersReducedMotion) {
     return null
