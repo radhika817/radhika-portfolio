@@ -89,6 +89,7 @@ export default function Contact() {
   return (
     <section
       id="contact"
+      aria-labelledby="contact-heading"
       style={{
         padding: '5rem 0 3.5rem',
         scrollMarginTop: '80px',
@@ -154,6 +155,7 @@ export default function Contact() {
           <span>// 07. CONNECT</span>
         </div>
         <h2
+          id="contact-heading"
           style={{
             fontSize: 'clamp(2rem, 4vw, 2.75rem)',
             fontWeight: 700,
@@ -282,6 +284,7 @@ export default function Contact() {
                 type="button"
                 onClick={handleCopyEmail}
                 data-cursor="Copy"
+                aria-label="Copy email address to clipboard"
                 style={{
                   background: copied ? 'rgba(16, 185, 129, 0.2)' : 'rgba(139, 92, 246, 0.12)',
                   border: `1px solid ${copied ? 'rgba(16, 185, 129, 0.4)' : 'var(--border-subtle)'}`,
@@ -389,6 +392,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noreferrer"
                     data-cursor="Open"
+                    aria-label={`Visit Radhika's ${profile.name} profile (opens in new tab)`}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',

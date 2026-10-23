@@ -36,6 +36,11 @@ export default function App() {
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
+      {/* Accessible Skip to Main Content Link for Keyboard Users */}
+      <a href="#main-content" className="skip-to-content">
+        Skip to main content
+      </a>
+
       {/* Top Scroll Progress Indicator */}
       <ScrollProgressBar />
 
@@ -54,8 +59,10 @@ export default function App() {
       {/* Hero Section with 3D Avatar, Aurora Glow, and CTAs */}
       <Hero />
 
-      {/* Main Content Area with Semantic Section Skeletons */}
+      {/* Main Content Area with Semantic Landmark */}
       <main
+        id="main-content"
+        tabIndex={-1}
         style={{
           maxWidth: '1100px',
           margin: '0 auto',

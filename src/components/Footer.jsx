@@ -99,6 +99,7 @@ export default function Footer() {
             type="button"
             onClick={scrollToTop}
             data-cursor="Open"
+            aria-label="Scroll back to top of page"
             style={{
               display: 'inline-flex',
               alignItems: 'center',

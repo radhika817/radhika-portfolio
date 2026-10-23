@@ -372,6 +372,7 @@ export default function Terminal() {
   return (
     <section
       id="terminal"
+      aria-labelledby="terminal-heading"
       style={{
         padding: '5rem 0 3.5rem',
         scrollMarginTop: '80px',
@@ -402,6 +403,7 @@ export default function Terminal() {
           <span>// 06. INTERACTIVE CLI</span>
         </div>
         <h2
+          id="terminal-heading"
           style={{
             fontSize: 'clamp(2rem, 4vw, 2.75rem)',
             fontWeight: 700,
@@ -595,6 +597,7 @@ export default function Terminal() {
             <input
               ref={inputRef}
               type="text"
+              aria-label="Terminal command prompt"
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
               onKeyDown={handleKeyDown}

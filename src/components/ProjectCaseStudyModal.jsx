@@ -78,15 +78,58 @@ const CASE_STUDY_DETAILS = {
 export default function ProjectCaseStudyModal({ project, isOpen, onClose }) {
   const prefersReducedMotion = useReducedMotion()
   const modalRef = useRef(null)
+  const previousActiveElementRef = useRef(null)
 
-  // Manage body scroll and Escape key
+  // Manage body scroll, focus trapping, and Escape key
   useEffect(() => {
     if (isOpen) {
+      previousActiveElementRef.current = document.activeElement
       document.body.style.overflow = 'hidden'
+
+      // Move focus to first interactive element inside modal
+      requestAnimationFrame(() => {
+        if (modalRef.current) {
+          const focusable = Array.from(
+            modalRef.current.querySelectorAll(
+              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            )
+          ).filter((el) => !el.hasAttribute('disabled'))
+          if (focusable.length > 0) {
+            focusable[0].focus()
+          }
+        }
+      })
 
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
           onClose()
+          return
+        }
+
+        // Focus trap
+        if (e.key === 'Tab' && modalRef.current) {
+          const focusable = Array.from(
+            modalRef.current.querySelectorAll(
+              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            )
+          ).filter((el) => !el.hasAttribute('disabled'))
+
+          if (focusable.length === 0) return
+
+          const first = focusable[0]
+          const last = focusable[focusable.length - 1]
+
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault()
+              last.focus()
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault()
+              first.focus()
+            }
+          }
         }
       }
 
@@ -94,6 +137,12 @@ export default function ProjectCaseStudyModal({ project, isOpen, onClose }) {
       return () => {
         document.body.style.overflow = ''
         window.removeEventListener('keydown', handleKeyDown)
+        if (
+          previousActiveElementRef.current &&
+          typeof previousActiveElementRef.current.focus === 'function'
+        ) {
+          previousActiveElementRef.current.focus()
+        }
       }
     } else {
       document.body.style.overflow = ''

@@ -140,6 +140,7 @@ export default function Achievements() {
   return (
     <section
       id="achievements"
+      aria-labelledby="achievements-heading"
       style={{
         padding: '5rem 0 3.5rem',
         scrollMarginTop: '80px',
@@ -170,6 +171,7 @@ export default function Achievements() {
           <span>// 05. HONORS</span>
         </div>
         <h2
+          id="achievements-heading"
           style={{
             fontSize: 'clamp(2rem, 4vw, 2.75rem)',
             fontWeight: 700,

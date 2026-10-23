@@ -91,6 +91,7 @@ export default function About() {
   return (
     <section
       id="about"
+      aria-labelledby="about-heading"
       style={{
         padding: '5rem 0 3.5rem',
         scrollMarginTop: '80px',
@@ -115,6 +116,7 @@ export default function About() {
           <span>// 01. BACKGROUND</span>
         </div>
         <h2
+          id="about-heading"
           style={{
             fontSize: 'clamp(2rem, 4vw, 2.75rem)',
             fontWeight: 700,

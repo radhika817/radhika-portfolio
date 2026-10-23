@@ -38,6 +38,7 @@ export default function Experience() {
   return (
     <section
       id="experience"
+      aria-labelledby="experience-heading"
       style={{
         padding: '5rem 0 3.5rem',
         scrollMarginTop: '80px',
@@ -68,6 +69,7 @@ export default function Experience() {
           <span>// 04. EXPERIENCE</span>
         </div>
         <h2
+          id="experience-heading"
           style={{
             fontSize: 'clamp(2rem, 4vw, 2.75rem)',
             fontWeight: 700,

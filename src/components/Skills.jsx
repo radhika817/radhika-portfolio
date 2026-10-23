@@ -187,6 +187,7 @@ export default function Skills() {
   return (
     <section
       id="skills"
+      aria-labelledby="skills-heading"
       style={{
         padding: '5rem 0 3.5rem',
         scrollMarginTop: '80px',
@@ -217,6 +218,7 @@ export default function Skills() {
           <span>// 03. CAPABILITIES</span>
         </div>
         <h2
+          id="skills-heading"
           style={{
             fontSize: 'clamp(2rem, 4vw, 2.75rem)',
             fontWeight: 700,

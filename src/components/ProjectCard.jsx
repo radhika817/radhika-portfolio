@@ -439,6 +439,7 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                 target="_blank"
                 rel="noreferrer"
                 data-cursor="Open"
+                aria-label={`Launch live demo for ${project.title} (opens in new tab)`}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -486,6 +487,7 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                 target="_blank"
                 rel="noreferrer"
                 data-cursor="Open"
+                aria-label={`View ${project.title} source code on GitHub (opens in new tab)`}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -532,6 +534,7 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                 type="button"
                 onClick={() => onOpenCaseStudy(project)}
                 data-cursor="View"
+                aria-label={`Read ${project.title} case study and architecture breakdown`}
                 style={{
                   marginLeft: 'auto',
                   display: 'inline-flex',

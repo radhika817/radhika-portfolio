@@ -39,6 +39,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
+      aria-labelledby="projects-heading"
       style={{
         padding: '5rem 0 3.5rem',
         scrollMarginTop: '80px',
@@ -69,6 +70,7 @@ export default function Projects() {
           <span>// 02. FEATURED WORK</span>
         </div>
         <h2
+          id="projects-heading"
           style={{
             fontSize: 'clamp(2rem, 4vw, 2.75rem)',
             fontWeight: 700,

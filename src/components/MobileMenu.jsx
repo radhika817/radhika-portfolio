@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, FileText, ArrowUpRight } from 'lucide-react'
 import { personalInfo } from '../data/content'
@@ -6,19 +6,59 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 
 /**
  * MobileMenu component providing full-screen animated overlay for mobile screens
- * with keyboard accessibility (Escape to close) and body scroll lock.
+ * with keyboard accessibility (Escape to close, focus trap) and body scroll lock.
  */
 export default function MobileMenu({ isOpen, setIsOpen, activeSection, navLinks }) {
   const prefersReducedMotion = useReducedMotion()
+  const menuRef = useRef(null)
+  const previousActiveElementRef = useRef(null)
 
-  // Lock body scroll and listen for Escape key
+  // Lock body scroll, trap focus, and listen for Escape key
   useEffect(() => {
     if (isOpen) {
+      previousActiveElementRef.current = document.activeElement
       document.body.style.overflow = 'hidden'
+
+      requestAnimationFrame(() => {
+        if (menuRef.current) {
+          const focusable = menuRef.current.querySelectorAll(
+            'a, button, [tabindex]:not([tabindex="-1"])'
+          )
+          if (focusable.length > 0) {
+            focusable[0].focus()
+          }
+        }
+      })
 
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
           setIsOpen(false)
+          return
+        }
+
+        // Trap focus inside menu
+        if (e.key === 'Tab' && menuRef.current) {
+          const focusable = Array.from(
+            menuRef.current.querySelectorAll(
+              'a, button, [tabindex]:not([tabindex="-1"])'
+            )
+          )
+          if (focusable.length === 0) return
+
+          const first = focusable[0]
+          const last = focusable[focusable.length - 1]
+
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault()
+              last.focus()
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault()
+              first.focus()
+            }
+          }
         }
       }
 
@@ -26,6 +66,12 @@ export default function MobileMenu({ isOpen, setIsOpen, activeSection, navLinks 
       return () => {
         document.body.style.overflow = ''
         window.removeEventListener('keydown', handleKeyDown)
+        if (
+          previousActiveElementRef.current &&
+          typeof previousActiveElementRef.current.focus === 'function'
+        ) {
+          previousActiveElementRef.current.focus()
+        }
       }
     } else {
       document.body.style.overflow = ''
@@ -36,6 +82,7 @@ export default function MobileMenu({ isOpen, setIsOpen, activeSection, navLinks 
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          ref={menuRef}
           role="dialog"
           aria-modal="true"
           aria-label="Mobile Navigation Menu"
