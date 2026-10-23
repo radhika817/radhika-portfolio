@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDown, FileText, Mail } from 'lucide-react'
 import { personalInfo } from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import MagneticButton from './MagneticButton'
-import Avatar3D from './Avatar3D'
+
+const Avatar3D = lazy(() => import('./Avatar3D'))
+
 
 // Ambient particles orbiting near the avatar
 const AMBIENT_PARTICLES = [
@@ -306,8 +308,37 @@ export default function Hero() {
             </div>
           )}
 
-          {/* 3D Avatar */}
-          <Avatar3D />
+          {/* 3D Avatar (Lazy-loaded with Suspense fallback) */}
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  width: '100%',
+                  maxWidth: '430px',
+                  minHeight: '440px',
+                  borderRadius: '28px',
+                  background: 'rgba(139, 92, 246, 0.05)',
+                  border: '1px solid rgba(139, 92, 246, 0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    border: '2px solid rgba(139, 92, 246, 0.25)',
+                    borderTopColor: 'var(--color-violet-light)',
+                    animation: 'spin 1s linear infinite',
+                  }}
+                />
+              </div>
+            }
+          >
+            <Avatar3D />
+          </Suspense>
         </div>
       </div>
 

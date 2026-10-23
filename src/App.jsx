@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import Preloader from './components/Preloader'
 import Navbar from './components/Navbar'
 import ScrollProgressBar from './components/ScrollProgressBar'
@@ -13,13 +13,16 @@ import { usePointerType } from './hooks/usePointerType'
 import { useSmoothScroll } from './hooks/useSmoothScroll'
 import { useActiveSection } from './hooks/useActiveSection'
 import About from './components/About'
-import Projects from './components/Projects'
-import Skills from './components/Skills'
-import Experience from './components/Experience'
-import Achievements from './components/Achievements'
-import Terminal from './components/Terminal'
-import Contact from './components/Contact'
-import Footer from './components/Footer'
+
+// Lazy loaded below-the-fold components
+const Projects = lazy(() => import('./components/Projects'))
+const Skills = lazy(() => import('./components/Skills'))
+const Experience = lazy(() => import('./components/Experience'))
+const Achievements = lazy(() => import('./components/Achievements'))
+const Terminal = lazy(() => import('./components/Terminal'))
+const Contact = lazy(() => import('./components/Contact'))
+const Footer = lazy(() => import('./components/Footer'))
+
 
 const SECTION_IDS = ['about', 'projects', 'skills', 'experience', 'achievements', 'terminal', 'contact']
 
@@ -128,28 +131,71 @@ export default function App() {
         {/* Section: About with Animated Stat Counters */}
         <About />
 
-        {/* Section: Featured Projects */}
-        <Projects />
+        {/* Section: Featured Projects (Lazy Loaded) */}
+        <Suspense fallback={<SectionFallback id="projects" label="Projects" />}>
+          <Projects />
+        </Suspense>
 
-        {/* Section: Technical Skills */}
-        <Skills />
+        {/* Section: Technical Skills (Lazy Loaded) */}
+        <Suspense fallback={<SectionFallback id="skills" label="Skills" />}>
+          <Skills />
+        </Suspense>
 
-        {/* Section: Experience Timeline */}
-        <Experience />
+        {/* Section: Experience Timeline (Lazy Loaded) */}
+        <Suspense fallback={<SectionFallback id="experience" label="Experience" />}>
+          <Experience />
+        </Suspense>
 
-        {/* Section: Achievements & Recognition */}
-        <Achievements />
+        {/* Section: Achievements & Recognition (Lazy Loaded) */}
+        <Suspense fallback={<SectionFallback id="achievements" label="Achievements" />}>
+          <Achievements />
+        </Suspense>
 
-        {/* Section: Terminal Skeleton */}
-        {/* Section: Interactive Terminal */}
-        <Terminal />
+        {/* Section: Interactive Terminal (Lazy Loaded) */}
+        <Suspense fallback={<SectionFallback id="terminal" label="Terminal" />}>
+          <Terminal />
+        </Suspense>
 
-        {/* Section: Contact & Socials */}
-        <Contact />
+        {/* Section: Contact & Socials (Lazy Loaded) */}
+        <Suspense fallback={<SectionFallback id="contact" label="Contact" />}>
+          <Contact />
+        </Suspense>
       </main>
 
-      {/* Global Footer */}
-      <Footer />
+      {/* Global Footer (Lazy Loaded) */}
+      <Suspense fallback={<div style={{ minHeight: '80px' }} />}>
+        <Footer />
+      </Suspense>
+    </div>
+  )
+}
+
+function SectionFallback({ id, label }) {
+  return (
+    <div
+      id={id}
+      aria-label={`Loading ${label || 'section'}`}
+      style={{
+        minHeight: '340px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 'var(--radius-lg)',
+        border: '1px dashed rgba(139, 92, 246, 0.15)',
+        background: 'rgba(15, 10, 26, 0.25)',
+        margin: '2rem 0',
+      }}
+    >
+      <div
+        style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '50%',
+          border: '2px solid rgba(139, 92, 246, 0.2)',
+          borderTopColor: 'var(--color-violet-light)',
+          animation: 'spin 1s linear infinite',
+        }}
+      />
     </div>
   )
 }
