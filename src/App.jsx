@@ -14,6 +14,7 @@ import { useSmoothScroll } from './hooks/useSmoothScroll'
 import { useActiveSection } from './hooks/useActiveSection'
 import About from './components/About'
 import Projects from './components/Projects'
+import Skills from './components/Skills'
 
 const SECTION_IDS = ['about', 'projects', 'skills', 'achievements', 'terminal', 'contact']
 
@@ -118,40 +119,8 @@ export default function App() {
         {/* Section: Featured Projects */}
         <Projects />
 
-        {/* Section: Skills Skeleton */}
-        <section
-          id="skills"
-          style={{
-            padding: '3.5rem 0',
-            scrollMarginTop: '80px',
-            borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
-          }}
-        >
-          <div
-            style={{
-              display: 'inline-block',
-              color: 'var(--color-violet-light)',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.85rem',
-              marginBottom: '0.5rem',
-            }}
-          >
-            // 03. CAPABILITIES
-          </div>
-          <h2
-            style={{
-              fontSize: '2rem',
-              marginBottom: '1rem',
-              color: 'var(--text-primary)',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Technical Skills
-          </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            Languages, frameworks, Web3 smart contracts, databases, and core computer science foundations.
-          </p>
-        </section>
+        {/* Section: Technical Skills */}
+        <Skills />
 
         {/* Section: Achievements Skeleton */}
         <section
