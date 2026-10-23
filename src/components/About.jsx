@@ -131,9 +131,10 @@ export default function About() {
 
       {/* Main Grid: Bio + Academic Highlight */}
       <div
+        className="about-main-grid"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
           gap: '2rem',
           marginBottom: '3rem',
         }}
@@ -270,9 +271,10 @@ export default function About() {
 
       {/* Animated Stat Counters Grid */}
       <div
+        className="about-stats-grid"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))',
           gap: '1.25rem',
         }}
       >

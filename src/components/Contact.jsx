@@ -230,6 +230,7 @@ export default function Contact() {
 
             {/* Email item with Copy button */}
             <div
+              className="contact-email-row"
               style={{
                 background: 'rgba(255, 255, 255, 0.03)',
                 border: '1px solid var(--border-medium)',

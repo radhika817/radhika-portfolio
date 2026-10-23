@@ -65,6 +65,7 @@ export default function App() {
       {/* Main Content Area with Semantic Landmark */}
       <main
         id="main-content"
+        className="portfolio-main-container"
         tabIndex={-1}
         style={{
           maxWidth: '1100px',

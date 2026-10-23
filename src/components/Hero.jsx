@@ -183,6 +183,7 @@ export default function Hero() {
 
           {/* Primary Hero CTAs with Magnetic Effect */}
           <div
+            className="hero-cta-group"
             style={{
               display: 'flex',
               flexWrap: 'wrap',
@@ -196,6 +197,7 @@ export default function Hero() {
               <a
                 href="#projects"
                 data-cursor="View"
+                className="hero-cta-btn"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -224,6 +226,7 @@ export default function Hero() {
                 target="_blank"
                 rel="noreferrer"
                 data-cursor="Open"
+                className="hero-cta-btn"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -249,6 +252,7 @@ export default function Hero() {
               <a
                 href="#contact"
                 data-cursor="Open"
+                className="hero-cta-btn"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

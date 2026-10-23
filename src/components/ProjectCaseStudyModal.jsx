@@ -197,6 +197,7 @@ export default function ProjectCaseStudyModal({ project, isOpen, onClose }) {
           {/* Modal Card */}
           <motion.div
             ref={modalRef}
+            className="case-study-modal-card"
             initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 15 }}

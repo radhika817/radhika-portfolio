@@ -156,6 +156,7 @@ export default function Footer() {
 
         {/* Bottom Metadata & Copyright */}
         <div
+          className="footer-meta-row"
           style={{
             display: 'flex',
             flexWrap: 'wrap',

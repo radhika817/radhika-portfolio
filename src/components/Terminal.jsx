@@ -447,6 +447,7 @@ export default function Terminal() {
       >
         {/* Terminal Title Bar */}
         <div
+          className="terminal-window-header"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -507,6 +508,7 @@ export default function Terminal() {
 
           {/* Right Status Badge */}
           <div
+            className="terminal-theme-badge"
             style={{
               fontSize: '0.72rem',
               color: 'var(--color-violet-light)',
@@ -522,6 +524,7 @@ export default function Terminal() {
 
         {/* Terminal Body */}
         <div
+          className="terminal-window-body"
           style={{
             padding: '1.5rem',
             minHeight: '280px',
@@ -538,7 +541,10 @@ export default function Terminal() {
               <div key={entry.id || idx} style={{ marginBottom: '0.75rem' }}>
                 {entry.type === 'input' ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ color: '#10b981' }}>radhika@portfolio</span>
+                    <span style={{ color: '#10b981' }}>
+                      <span className="terminal-prompt-full">radhika@portfolio</span>
+                      <span className="terminal-prompt-short" style={{ display: 'none' }}>rk</span>
+                    </span>
                     <span style={{ color: 'var(--color-violet-light)' }}>:</span>
                     <span style={{ color: '#38bdf8' }}>~</span>
                     <span style={{ color: 'var(--text-muted)' }}>$</span>
@@ -590,7 +596,10 @@ export default function Terminal() {
               marginTop: '0.5rem',
             }}
           >
-            <span style={{ color: '#10b981', flexShrink: 0 }}>radhika@portfolio</span>
+            <span style={{ color: '#10b981', flexShrink: 0 }}>
+              <span className="terminal-prompt-full">radhika@portfolio</span>
+              <span className="terminal-prompt-short" style={{ display: 'none' }}>rk</span>
+            </span>
             <span style={{ color: 'var(--color-violet-light)', flexShrink: 0 }}>:</span>
             <span style={{ color: '#38bdf8', flexShrink: 0 }}>~</span>
             <span style={{ color: 'var(--text-muted)', flexShrink: 0 }}>$</span>
