@@ -470,6 +470,55 @@ body.custom-cursor-active select {
   outline-offset: 2px !important;
 }
 
+/* Reduced Motion: Disable all cursor, particles, parallax, and heavy animations */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hero-aurora-glow {
+    animation: none !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+
+  .hero-particle {
+    display: none !important;
+  }
+
+  .mouse-scroll-dot {
+    animation: none !important;
+  }
+
+  .tech-marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .skill-chip:hover {
+    transform: none !important;
+  }
+
+  .achievement-card:hover {
+    transform: none !important;
+  }
+
+  .cursor-dot,
+  .cursor-ring,
+  .cursor-glow-spotlight {
+    display: none !important;
+  }
+}
+
+
 
 
 
