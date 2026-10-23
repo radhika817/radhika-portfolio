@@ -1,9 +1,26 @@
-# radhika-portfolio
 # Radhika Kandalkar — Developer Portfolio
 
-A highly animated, interactive developer portfolio built with **React + Vite**. It opens with a 3D developer avatar on the first screen, reacts to the cursor everywhere, and presents projects, skills, and achievements through a dark, futuristic, violet-accented experience.
+[![Live Site](https://img.shields.io/badge/Live_URL-radhika--portfolio.vercel.app-8b5cf6?style=for-the-badge&logo=vercel&logoColor=white)](https://radhika-portfolio.vercel.app)
+[![React](https://img.shields.io/badge/React-19.1-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-6.2-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-14.6-ff0055?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 
-> **Design direction:** Violet After Dark — immersive motion, cursor-driven effects, a 3D avatar landing page, and project case studies focused on engineering decisions.
+> **Live Production URL:** [https://radhika-portfolio.vercel.app](https://radhika-portfolio.vercel.app) *(Live deployment placeholder)*
+
+A highly animated, interactive developer portfolio built with **React + Vite**. It opens with an interactive 3D developer avatar on the first screen, reacts fluidly to the cursor across every view, and presents projects, skills, and achievements through a dark, futuristic "Violet After Dark" aesthetic.
+
+> **Design direction:** Violet After Dark — immersive spatial motion, cursor-driven spotlights, interactive terminal, and engineering case studies detailing real technical decisions.
+
+## Screenshots & Visual Showcase
+
+| View | Highlights | Visual Preview |
+| :--- | :--- | :---: |
+| **Hero & 3D Avatar** | Interactive 3D avatar tilt, typewriter role intro, availability status badge, and magnetic CTAs. | ![Developer Avatar](public/images/avatar.webp) |
+| **Featured Projects Grid** | Cursor-tracking spotlight border glow, 3D card tilt, tech chips, and live links. | `[Screenshot: Projects Grid]` |
+| **Architecture Case Studies** | Deep-dive modal with Problem Statement, Solution Approach, and Engineering Tradeoffs. | `[Screenshot: Case Study Modal]` |
+| **Interactive Terminal** | Styled bash window with tab-completion, history buffer, typed output, and theme switching. | `[Screenshot: Bash Terminal]` |
+| **Stats & Experience Timeline** | Verified academic counters (CGPA 8.51, 198 questions, 500+ participants) and internship milestones. | `[Screenshot: Experience Timeline]` |
+| **Contact Hub & Mail Composer** | One-click copy email button with toast feedback and instant mail client composer. | `[Screenshot: Contact Hub]` |
 
 ## About
 
