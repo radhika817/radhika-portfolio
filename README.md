@@ -228,5 +228,43 @@ radhika-portfolio/
 8. **Stage 8 (Polish):** Full keyboard accessibility, reduced-motion compliance, lazy code-splitting, rAF throttling, and responsive pass.
 9. **Stage 9 (Deployment):** Vercel SPA configuration, asset caching, and production deployment documentation.
 
+## Deployment to Vercel
+
+This portfolio is configured and optimized for instant one-click deployment on [Vercel](https://vercel.com).
+
+### Option A: Deploy via Vercel Dashboard (Recommended)
+
+1. **Push Changes to GitHub:**
+   Ensure all changes are pushed to your GitHub repository:
+   ```bash
+   git push origin main
+   ```
+2. **Import Repository in Vercel:**
+   - Go to [vercel.com/new](https://vercel.com/new) and log in with GitHub.
+   - Under **Import Git Repository**, find and select `radhika817/radhika-portfolio`.
+3. **Verify Build Settings:**
+   - **Framework Preset:** `Vite` (auto-detected)
+   - **Root Directory:** `./`
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+   - **Install Command:** `npm install`
+4. **Click Deploy:**
+   - Vercel automatically runs the Vite build, activates the `vercel.json` SPA rewrite rules and immutable cache headers, and assigns your live domain (e.g. `https://radhika-portfolio.vercel.app`).
+
+### Option B: Deploy via Vercel CLI
+
+```bash
+# 1. Install Vercel CLI (optional)
+npm install -g vercel
+
+# 2. Login to Vercel account
+vercel login
+
+# 3. Deploy to production
+vercel --prod
+```
+
+---
 
 Built with curiosity, iteration, and a focus on solving real problems.
+
