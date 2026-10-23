@@ -17,6 +17,7 @@ import Projects from './components/Projects'
 import Skills from './components/Skills'
 import Experience from './components/Experience'
 import Achievements from './components/Achievements'
+import Terminal from './components/Terminal'
 
 const SECTION_IDS = ['about', 'projects', 'skills', 'experience', 'achievements', 'terminal', 'contact']
 
@@ -131,39 +132,8 @@ export default function App() {
         <Achievements />
 
         {/* Section: Terminal Skeleton */}
-        <section
-          id="terminal"
-          style={{
-            padding: '3.5rem 0',
-            scrollMarginTop: '80px',
-            borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
-          }}
-        >
-          <div
-            style={{
-              display: 'inline-block',
-              color: 'var(--color-violet-light)',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.85rem',
-              marginBottom: '0.5rem',
-            }}
-          >
-            // 05. INTERACTION
-          </div>
-          <h2
-            style={{
-              fontSize: '2rem',
-              marginBottom: '1rem',
-              color: 'var(--text-primary)',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Interactive Terminal
-          </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            CLI developer sandbox supporting commands: help, projects, skills, achievements, contact.
-          </p>
-        </section>
+        {/* Section: Interactive Terminal */}
+        <Terminal />
 
         {/* Section: Contact Skeleton */}
         <section
