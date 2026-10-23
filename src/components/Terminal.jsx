@@ -20,14 +20,119 @@ export const AVAILABLE_COMMANDS = [
   'experience',
   'contact',
   'resume',
+  'theme',
   'clear',
 ]
+
+export const THEMES = {
+  violet: {
+    name: 'Violet After Dark',
+    violet: '#8b5cf6',
+    violetLight: '#a78bfa',
+    violetDark: '#6d28d9',
+    lavender: '#c4b5fd',
+  },
+  cyan: {
+    name: 'Cyberpunk Cyan',
+    violet: '#06b6d4',
+    violetLight: '#38bdf8',
+    violetDark: '#0284c7',
+    lavender: '#a5f3fc',
+  },
+  emerald: {
+    name: 'Matrix Emerald',
+    violet: '#10b981',
+    violetLight: '#34d399',
+    violetDark: '#059669',
+    lavender: '#a7f3d0',
+  },
+  amber: {
+    name: 'Solar Amber',
+    violet: '#f59e0b',
+    violetLight: '#fbbf24',
+    violetDark: '#d97706',
+    lavender: '#fde68a',
+  },
+  rose: {
+    name: 'Synthwave Rose',
+    violet: '#ec4899',
+    violetLight: '#f472b6',
+    violetDark: '#db2777',
+    lavender: '#fbcfe8',
+  },
+}
+
+const THEME_KEYS = Object.keys(THEMES)
+
+function applyTheme(themeKey) {
+  const theme = THEMES[themeKey]
+  if (!theme || typeof document === 'undefined') return false
+  const root = document.documentElement
+  root.style.setProperty('--color-violet', theme.violet)
+  root.style.setProperty('--color-violet-light', theme.violetLight)
+  root.style.setProperty('--color-violet-dark', theme.violetDark)
+  root.style.setProperty('--color-lavender', theme.lavender)
+  return true
+}
+
+/**
+ * Snappy TypedOutput component that animates newly printed lines
+ */
+function TypedOutput({ text, isLatest, prefersReducedMotion }) {
+  const [displayedLength, setDisplayedLength] = useState(
+    prefersReducedMotion || !isLatest ? text.length : 0
+  )
+
+  useEffect(() => {
+    if (prefersReducedMotion || !isLatest) {
+      setDisplayedLength(text.length)
+      return
+    }
+
+    setDisplayedLength(0)
+    let current = 0
+    // Dynamic snappy chunk rate: multi-line finishes in < 400ms
+    const step = Math.max(3, Math.floor(text.length / 35))
+    const interval = setInterval(() => {
+      current = Math.min(current + step, text.length)
+      setDisplayedLength(current)
+      if (current >= text.length) {
+        clearInterval(interval)
+      }
+    }, 12)
+
+    return () => clearInterval(interval)
+  }, [text, isLatest, prefersReducedMotion])
+
+  const isTyping = displayedLength < text.length
+
+  return (
+    <span>
+      {text.slice(0, displayedLength)}
+      {isTyping && (
+        <span
+          style={{
+            display: 'inline-block',
+            width: '6px',
+            height: '13px',
+            backgroundColor: 'var(--color-violet-light)',
+            marginLeft: '3px',
+            verticalAlign: 'middle',
+            opacity: 0.8,
+          }}
+        />
+      )}
+    </span>
+  )
+}
 
 /**
  * Executes a terminal command string and returns output text.
  */
-function executeCommand(rawCommand) {
-  const cmd = rawCommand.trim().toLowerCase()
+function executeCommand(rawCommand, currentTheme, setCurrentTheme) {
+  const parts = rawCommand.trim().split(/\s+/)
+  const cmd = parts[0]?.toLowerCase()
+  const arg = parts[1]?.toLowerCase()
 
   switch (cmd) {
     case 'help':
@@ -40,6 +145,7 @@ function executeCommand(rawCommand) {
         '  experience    Show professional internships and campus outreach',
         '  contact       Get email, location, and social profile links',
         '  resume        Open resume document (/resume.pdf)',
+        '  theme [name]  Cycle or set accent theme (violet, cyan, emerald, amber, rose)',
         '  clear         Clear the terminal screen buffer',
         '  help          Display this help manual',
       ].join('\n')
@@ -118,21 +224,38 @@ function executeCommand(rawCommand) {
       }
       return 'Opening /resume.pdf in a new tab... [Done]'
 
+    case 'theme': {
+      let targetTheme = arg
+      if (!targetTheme || !THEMES[targetTheme]) {
+        // Cycle to next theme
+        const currentIdx = THEME_KEYS.indexOf(currentTheme)
+        const nextIdx = (currentIdx + 1) % THEME_KEYS.length
+        targetTheme = THEME_KEYS[nextIdx]
+      }
+
+      applyTheme(targetTheme)
+      setCurrentTheme(targetTheme)
+      const themeMeta = THEMES[targetTheme]
+      return `Theme switched to [${targetTheme}] — "${themeMeta.name}".\nAvailable themes: ${THEME_KEYS.join(', ')}`
+    }
+
     default:
       return `bash: command not found: "${rawCommand}". Type "help" to view available developer commands.`
   }
 }
 
 /**
- * Terminal UI Window with history navigation (Arrow Up/Down)
- * and command tab-completion.
+ * Terminal UI Window with typed output animation, theme cycling,
+ * command history navigation, and tab-completion.
  */
 export default function Terminal() {
   const [inputVal, setInputVal] = useState('')
+  const [currentTheme, setCurrentTheme] = useState('violet')
   const [history, setHistory] = useState([
     {
+      id: 0,
       type: 'system',
-      text: 'Radhika OS v1.0.0 [x86_64-pc-linux-gnu]\nType "help" to view available developer commands. Press Tab for completion.',
+      text: 'Radhika OS v1.0.0 [x86_64-pc-linux-gnu]\nType "help" for commands. Type "theme" to cycle theme colors. Tab to complete.',
     },
   ])
   const [cmdHistory, setCmdHistory] = useState([])
@@ -181,8 +304,8 @@ export default function Terminal() {
         } else {
           setHistory((prev) => [
             ...prev,
-            { type: 'input', text: inputVal },
-            { type: 'system', text: `Matching commands: ${matches.join('   ')}` },
+            { id: Date.now(), type: 'input', text: inputVal },
+            { id: Date.now() + 1, type: 'system', text: `Matching commands: ${matches.join('   ')}` },
           ])
         }
       }
@@ -237,11 +360,11 @@ export default function Terminal() {
       return
     }
 
-    const output = executeCommand(trimmed)
+    const output = executeCommand(trimmed, currentTheme, setCurrentTheme)
     setHistory((prev) => [
       ...prev,
-      { type: 'input', text: trimmed },
-      { type: 'output', text: output },
+      { id: Date.now(), type: 'input', text: trimmed },
+      { id: Date.now() + 1, type: 'output', text: output },
     ])
     setInputVal('')
   }
@@ -391,7 +514,7 @@ export default function Terminal() {
               border: '1px solid rgba(139, 92, 246, 0.2)',
             }}
           >
-            Tab to complete
+            theme: {currentTheme}
           </div>
         </div>
 
@@ -407,42 +530,53 @@ export default function Terminal() {
           }}
         >
           {/* Output log */}
-          {history.map((entry, idx) => (
-            <div key={idx} style={{ marginBottom: '0.75rem' }}>
-              {entry.type === 'input' ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ color: '#10b981' }}>radhika@portfolio</span>
-                  <span style={{ color: 'var(--color-violet-light)' }}>:</span>
-                  <span style={{ color: '#38bdf8' }}>~</span>
-                  <span style={{ color: 'var(--text-muted)' }}>$</span>
-                  <span style={{ color: '#ffffff' }}>{entry.text}</span>
-                </div>
-              ) : entry.type === 'system' ? (
-                <div
-                  style={{
-                    color: 'var(--color-violet-light)',
-                    background: 'rgba(139, 92, 246, 0.08)',
-                    padding: '0.6rem 0.85rem',
-                    borderRadius: 'var(--radius-sm)',
-                    borderLeft: '3px solid var(--color-violet)',
-                    whiteSpace: 'pre-line',
-                  }}
-                >
-                  {entry.text}
-                </div>
-              ) : (
-                <div
-                  style={{
-                    color: entry.text.startsWith('bash:') ? '#f87171' : 'var(--text-secondary)',
-                    whiteSpace: 'pre-line',
-                    paddingLeft: '0.25rem',
-                  }}
-                >
-                  {entry.text}
-                </div>
-              )}
-            </div>
-          ))}
+          {history.map((entry, idx) => {
+            const isLatest = idx === history.length - 1
+            return (
+              <div key={entry.id || idx} style={{ marginBottom: '0.75rem' }}>
+                {entry.type === 'input' ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ color: '#10b981' }}>radhika@portfolio</span>
+                    <span style={{ color: 'var(--color-violet-light)' }}>:</span>
+                    <span style={{ color: '#38bdf8' }}>~</span>
+                    <span style={{ color: 'var(--text-muted)' }}>$</span>
+                    <span style={{ color: '#ffffff' }}>{entry.text}</span>
+                  </div>
+                ) : entry.type === 'system' ? (
+                  <div
+                    style={{
+                      color: 'var(--color-violet-light)',
+                      background: 'rgba(139, 92, 246, 0.08)',
+                      padding: '0.6rem 0.85rem',
+                      borderRadius: 'var(--radius-sm)',
+                      borderLeft: '3px solid var(--color-violet)',
+                      whiteSpace: 'pre-line',
+                    }}
+                  >
+                    <TypedOutput
+                      text={entry.text}
+                      isLatest={isLatest}
+                      prefersReducedMotion={prefersReducedMotion}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      color: entry.text.startsWith('bash:') ? '#f87171' : 'var(--text-secondary)',
+                      whiteSpace: 'pre-line',
+                      paddingLeft: '0.25rem',
+                    }}
+                  >
+                    <TypedOutput
+                      text={entry.text}
+                      isLatest={isLatest}
+                      prefersReducedMotion={prefersReducedMotion}
+                    />
+                  </div>
+                )}
+              </div>
+            )
+          })}
 
           {/* Active Input Line */}
           <form
