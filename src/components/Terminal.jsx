@@ -124,17 +124,21 @@ function executeCommand(rawCommand) {
 }
 
 /**
- * Terminal UI Window with core commands (help, about, projects, skills,
- * achievements, contact, resume, clear, and unknown command handling).
+ * Terminal UI Window with history navigation (Arrow Up/Down)
+ * and command tab-completion.
  */
 export default function Terminal() {
   const [inputVal, setInputVal] = useState('')
   const [history, setHistory] = useState([
     {
       type: 'system',
-      text: 'Radhika OS v1.0.0 [x86_64-pc-linux-gnu]\nType "help" to view available developer commands.',
+      text: 'Radhika OS v1.0.0 [x86_64-pc-linux-gnu]\nType "help" to view available developer commands. Press Tab for completion.',
     },
   ])
+  const [cmdHistory, setCmdHistory] = useState([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+  const draftInputRef = useRef('')
+
   const inputRef = useRef(null)
   const windowRef = useRef(null)
   const bottomRef = useRef(null)
@@ -153,10 +157,79 @@ export default function Terminal() {
     }
   }, [history])
 
+  // Handle Tab completion and Up/Down history navigation
+  const handleKeyDown = (e) => {
+    // Tab completion
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      const query = inputVal.trim().toLowerCase()
+      if (!query) return
+
+      const matches = AVAILABLE_COMMANDS.filter((cmd) => cmd.startsWith(query))
+      if (matches.length === 1) {
+        setInputVal(matches[0])
+      } else if (matches.length > 1) {
+        // Find longest common prefix among matches
+        let commonPrefix = query
+        for (let i = query.length; ; i++) {
+          const char = matches[0][i]
+          if (!char || matches.some((m) => m[i] !== char)) break
+          commonPrefix += char
+        }
+        if (commonPrefix.length > query.length) {
+          setInputVal(commonPrefix)
+        } else {
+          setHistory((prev) => [
+            ...prev,
+            { type: 'input', text: inputVal },
+            { type: 'system', text: `Matching commands: ${matches.join('   ')}` },
+          ])
+        }
+      }
+      return
+    }
+
+    // Up arrow: Navigate backwards through command history
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      if (cmdHistory.length === 0) return
+
+      if (historyIndex === -1) {
+        draftInputRef.current = inputVal
+      }
+
+      const nextIndex = historyIndex + 1
+      if (nextIndex < cmdHistory.length) {
+        setHistoryIndex(nextIndex)
+        setInputVal(cmdHistory[cmdHistory.length - 1 - nextIndex])
+      }
+      return
+    }
+
+    // Down arrow: Navigate forwards through command history
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      if (historyIndex > 0) {
+        const nextIndex = historyIndex - 1
+        setHistoryIndex(nextIndex)
+        setInputVal(cmdHistory[cmdHistory.length - 1 - nextIndex])
+      } else if (historyIndex === 0) {
+        setHistoryIndex(-1)
+        setInputVal(draftInputRef.current || '')
+      }
+      return
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     const trimmed = inputVal.trim()
     if (!trimmed) return
+
+    // Save into command history
+    setCmdHistory((prev) => [...prev, trimmed])
+    setHistoryIndex(-1)
+    draftInputRef.current = ''
 
     if (trimmed.toLowerCase() === 'clear') {
       setHistory([])
@@ -318,7 +391,7 @@ export default function Terminal() {
               border: '1px solid rgba(139, 92, 246, 0.2)',
             }}
           >
-            Type &quot;help&quot;
+            Tab to complete
           </div>
         </div>
 
@@ -390,6 +463,7 @@ export default function Terminal() {
               type="text"
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
+              onKeyDown={handleKeyDown}
               autoFocus
               spellCheck="false"
               autoComplete="off"
