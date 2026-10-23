@@ -16,6 +16,7 @@ import About from './components/About'
 import Projects from './components/Projects'
 import Skills from './components/Skills'
 import Experience from './components/Experience'
+import Achievements from './components/Achievements'
 
 const SECTION_IDS = ['about', 'projects', 'skills', 'experience', 'achievements', 'terminal', 'contact']
 
@@ -126,40 +127,8 @@ export default function App() {
         {/* Section: Experience Timeline */}
         <Experience />
 
-        {/* Section: Achievements Skeleton */}
-        <section
-          id="achievements"
-          style={{
-            padding: '3.5rem 0',
-            scrollMarginTop: '80px',
-            borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
-          }}
-        >
-          <div
-            style={{
-              display: 'inline-block',
-              color: 'var(--color-violet-light)',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.85rem',
-              marginBottom: '0.5rem',
-            }}
-          >
-            // 04. HONORS
-          </div>
-          <h2
-            style={{
-              fontSize: '2rem',
-              marginBottom: '1rem',
-              color: 'var(--text-primary)',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Achievements & Recognition
-          </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            1st Prize Sinhgad Hackathon 2026, Vellora Hackathon Top 10, Decode SIH Top 50.
-          </p>
-        </section>
+        {/* Section: Achievements & Recognition */}
+        <Achievements />
 
         {/* Section: Terminal Skeleton */}
         <section
