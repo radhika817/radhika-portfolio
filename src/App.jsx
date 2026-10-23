@@ -19,6 +19,7 @@ import Experience from './components/Experience'
 import Achievements from './components/Achievements'
 import Terminal from './components/Terminal'
 import Contact from './components/Contact'
+import Footer from './components/Footer'
 
 const SECTION_IDS = ['about', 'projects', 'skills', 'experience', 'achievements', 'terminal', 'contact']
 
@@ -139,6 +140,9 @@ export default function App() {
         {/* Section: Contact & Socials */}
         <Contact />
       </main>
+
+      {/* Global Footer */}
+      <Footer />
     </div>
   )
 }
