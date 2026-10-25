@@ -1,11 +1,11 @@
 # Radhika Kandalkar — Developer Portfolio
 
-[![Live Site](https://img.shields.io/badge/Live_URL-radhika--portfolio.vercel.app-8b5cf6?style=for-the-badge&logo=vercel&logoColor=white)](https://radhika-portfolio.vercel.app)
+[![Live Site](https://img.shields.io/badge/Live_URL-radhika--portfolio--liard.vercel.app-8b5cf6?style=for-the-badge&logo=vercel&logoColor=white)](https://radhika-portfolio-liard.vercel.app/)
 [![React](https://img.shields.io/badge/React-19.1-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-6.2-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-14.6-ff0055?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 
-> **Live Production URL:** [https://radhika-portfolio.vercel.app](https://radhika-portfolio.vercel.app) *(Live deployment placeholder)*
+> **Live Production URL:** [https://radhika-portfolio-liard.vercel.app/](https://radhika-portfolio-liard.vercel.app/)
 
 A highly animated, interactive developer portfolio built with **React + Vite**. It opens with an interactive 3D developer avatar on the first screen, reacts fluidly to the cursor across every view, and presents projects, skills, and achievements through a dark, futuristic "Violet After Dark" aesthetic.
 
@@ -249,19 +249,16 @@ This portfolio is configured and optimized for instant one-click deployment on [
    - **Output Directory:** `dist`
    - **Install Command:** `npm install`
 4. **Click Deploy:**
-   - Vercel automatically runs the Vite build, activates the `vercel.json` SPA rewrite rules and immutable cache headers, and assigns your live domain (e.g. `https://radhika-portfolio.vercel.app`).
+   - Vercel automatically runs the Vite build, activates the `vercel.json` SPA rewrite rules and immutable cache headers, and assigns your live domain (e.g. `https://radhika-portfolio-liard.vercel.app/`).
 
-### Option B: Deploy via Vercel CLI
+### Option B: Deploy via Vercel CLI (or npx)
 
 ```bash
-# 1. Install Vercel CLI (optional)
-npm install -g vercel
+# 1. Login to Vercel account
+npx vercel login
 
-# 2. Login to Vercel account
-vercel login
-
-# 3. Deploy to production
-vercel --prod
+# 2. Deploy to production
+npx vercel --prod
 ```
 
 ---
