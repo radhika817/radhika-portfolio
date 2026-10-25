@@ -23,6 +23,9 @@ const Terminal = lazy(() => import('./components/Terminal'))
 const Contact = lazy(() => import('./components/Contact'))
 const Footer = lazy(() => import('./components/Footer'))
 
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { Toaster } from '@/components/ui/sonner'
+
 
 const SECTION_IDS = ['about', 'projects', 'skills', 'experience', 'achievements', 'terminal', 'contact']
 
@@ -38,6 +41,7 @@ export default function App() {
   const activeSection = useActiveSection(SECTION_IDS)
 
   return (
+    <TooltipProvider>
     <div style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
       {/* Accessible Skip to Main Content Link for Keyboard Users */}
       <a href="#main-content" className="skip-to-content">
@@ -167,7 +171,11 @@ export default function App() {
       <Suspense fallback={<div style={{ minHeight: '80px' }} />}>
         <Footer />
       </Suspense>
+
+      {/* Global shadcn Toast notifications */}
+      <Toaster position="bottom-right" richColors />
     </div>
+    </TooltipProvider>
   )
 }
 
