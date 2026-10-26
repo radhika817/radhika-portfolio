@@ -38,6 +38,17 @@ For this portfolio, MCP servers provide:
 * **Authentication:** Requires a 21st.dev API key (`API_KEY` / `TWENTY_FIRST_API_KEY` / `TWENTYFIRST_TOKEN`).
 * **Security Handling:** API keys are never stored in version control. They are read from environment variables or an untracked local environment file (`.env` or `.env.local`), which are strictly ignored in `.gitignore`.
 
+### C. Framelink Figma MCP Server (`figma` / `figma-developer-mcp`)
+* **Documentation:** [GLips/Figma-Context-MCP](https://github.com/GLips/Figma-Context-MCP) | [Figma to Code Workflow](FIGMA_WORKFLOW.md)
+* **Purpose:** Connects AI coding agents directly to Figma design frames to extract layout trees, auto-layout parameters, and tokens for translation into React and shadcn components.
+* **Transport Mechanism:** Stdio
+* **Execution Command:**
+  ```bash
+  npx -y figma-developer-mcp
+  ```
+* **Authentication:** Requires a Figma Personal Access Token via `FIGMA_API_KEY`.
+* **Security Handling:** Kept in untracked `.env` or `.env.local`, never committed to git.
+
 ---
 
 ## 3. Antigravity MCP Configuration Format
@@ -58,6 +69,13 @@ Configuration schema follows standard Stdio transport definitions:
       "args": ["-y", "@21st-dev/magic@latest"],
       "env": {
         "API_KEY": "${API_KEY_21ST}"
+      }
+    },
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp"],
+      "env": {
+        "FIGMA_API_KEY": "${FIGMA_API_KEY}"
       }
     }
   }
