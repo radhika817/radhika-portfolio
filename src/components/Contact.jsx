@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   Mail,
   Copy,
@@ -11,8 +11,13 @@ import {
   Clock,
   MessageSquare,
 } from 'lucide-react'
-import { contactInfo, personalInfo } from '../data/content'
+import { toast } from 'sonner'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { contactInfo } from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { cn } from '@/lib/utils'
 
 function GithubIcon({ size = 16, ...props }) {
   return (
@@ -35,11 +40,10 @@ function GithubIcon({ size = 16, ...props }) {
 
 /**
  * Contact Section with email, location, social profile links,
- * copy-email toast notification, and an interactive mailto contact form.
+ * Sonner toast notifications, and an interactive contact form powered by shadcn inputs.
  */
 export default function Contact() {
   const [copied, setCopied] = useState(false)
-  const [toastMessage, setToastMessage] = useState('')
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -53,7 +57,6 @@ export default function Contact() {
       if (navigator?.clipboard?.writeText) {
         await navigator.clipboard.writeText(contactInfo.email)
       } else {
-        // Fallback
         const textarea = document.createElement('textarea')
         textarea.value = contactInfo.email
         document.body.appendChild(textarea)
@@ -62,14 +65,12 @@ export default function Contact() {
         document.body.removeChild(textarea)
       }
       setCopied(true)
-      setToastMessage('✓ Email copied to clipboard: ' + contactInfo.email)
+      toast.success(`Email copied: ${contactInfo.email}`)
       setTimeout(() => {
         setCopied(false)
-        setToastMessage('')
       }, 3000)
     } catch {
-      setToastMessage('Email: ' + contactInfo.email)
-      setTimeout(() => setToastMessage(''), 3000)
+      toast.info(`Email: ${contactInfo.email}`)
     }
   }
 
@@ -81,9 +82,7 @@ export default function Contact() {
       `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n\n---\nSent via Radhika Kandalkar Portfolio`
     )
     window.location.href = `mailto:${contactInfo.email}?subject=${mailSubject}&body=${mailBody}`
-
-    setToastMessage('✓ Opening default mail client...')
-    setTimeout(() => setToastMessage(''), 3500)
+    toast.success('Opening default mail client...')
   }
 
   return (
@@ -96,41 +95,6 @@ export default function Contact() {
         position: 'relative',
       }}
     >
-      {/* Toast Notification */}
-      <AnimatePresence>
-        {toastMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.25 }}
-            style={{
-              position: 'fixed',
-              bottom: '2rem',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              zIndex: 1000,
-              background: 'rgba(19, 11, 36, 0.95)',
-              border: '1px solid var(--border-glow)',
-              color: '#ffffff',
-              padding: '0.75rem 1.4rem',
-              borderRadius: 'var(--radius-full)',
-              fontSize: '0.88rem',
-              fontFamily: 'var(--font-mono)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(139, 92, 246, 0.4)',
-              backdropFilter: 'blur(12px)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              pointerEvents: 'none',
-            }}
-          >
-            <Sparkles size={16} color="var(--color-violet-light)" />
-            <span>{toastMessage}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Section Header */}
       <motion.div
         initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
@@ -281,30 +245,24 @@ export default function Contact() {
                 </div>
               </div>
 
-              <button
+              {/* shadcn Button for Copy Email */}
+              <Button
                 type="button"
+                variant="outline"
+                size="sm"
                 onClick={handleCopyEmail}
                 data-cursor="Copy"
                 aria-label="Copy email address to clipboard"
-                style={{
-                  background: copied ? 'rgba(16, 185, 129, 0.2)' : 'rgba(139, 92, 246, 0.12)',
-                  border: `1px solid ${copied ? 'rgba(16, 185, 129, 0.4)' : 'var(--border-subtle)'}`,
-                  color: copied ? '#6ee7b7' : 'var(--color-violet-light)',
-                  padding: '0.5rem 0.75rem',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '0.78rem',
-                  fontFamily: 'var(--font-mono)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.35rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  flexShrink: 0,
-                }}
+                className={cn(
+                  "h-8 px-3 text-xs font-mono gap-1.5 transition-all shrink-0 rounded-[var(--radius-sm)]",
+                  copied
+                    ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/25"
+                    : "bg-violet-500/10 border-violet-500/25 text-[var(--color-violet-light)] hover:bg-violet-500/20 hover:text-white"
+                )}
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
                 <span>{copied ? 'Copied!' : 'Copy'}</span>
-              </button>
+              </Button>
             </div>
 
             {/* Location Item */}
@@ -459,73 +417,41 @@ export default function Contact() {
             Compose an Email
           </h3>
 
-          <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+          <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="contact-name"
-                  style={{
-                    display: 'block',
-                    fontSize: '0.78rem',
-                    color: 'var(--text-muted)',
-                    fontFamily: 'var(--font-mono)',
-                    marginBottom: '0.4rem',
-                  }}
+                  className="block text-xs font-mono text-[var(--text-muted)] mb-1.5 uppercase tracking-wider"
                 >
                   YOUR NAME
                 </label>
-                <input
+                <Input
                   id="contact-name"
                   type="text"
                   required
                   placeholder="e.g. Alex Smith"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1rem',
-                    borderRadius: 'var(--radius-sm)',
-                    background: 'rgba(7, 4, 13, 0.75)',
-                    border: '1px solid rgba(139, 92, 246, 0.25)',
-                    color: '#ffffff',
-                    fontSize: '0.9rem',
-                    outline: 'none',
-                    transition: 'border-color 0.2s ease',
-                  }}
+                  className="h-10 bg-[#07040d]/75 border-violet-500/25 focus-visible:border-violet-400 focus-visible:ring-violet-400/30 text-white placeholder:text-muted-foreground text-sm"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="contact-email"
-                  style={{
-                    display: 'block',
-                    fontSize: '0.78rem',
-                    color: 'var(--text-muted)',
-                    fontFamily: 'var(--font-mono)',
-                    marginBottom: '0.4rem',
-                  }}
+                  className="block text-xs font-mono text-[var(--text-muted)] mb-1.5 uppercase tracking-wider"
                 >
                   YOUR EMAIL
                 </label>
-                <input
+                <Input
                   id="contact-email"
                   type="email"
                   required
                   placeholder="alex@company.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1rem',
-                    borderRadius: 'var(--radius-sm)',
-                    background: 'rgba(7, 4, 13, 0.75)',
-                    border: '1px solid rgba(139, 92, 246, 0.25)',
-                    color: '#ffffff',
-                    fontSize: '0.9rem',
-                    outline: 'none',
-                    transition: 'border-color 0.2s ease',
-                  }}
+                  className="h-10 bg-[#07040d]/75 border-violet-500/25 focus-visible:border-violet-400 focus-visible:ring-violet-400/30 text-white placeholder:text-muted-foreground text-sm"
                 />
               </div>
             </div>
@@ -533,97 +459,48 @@ export default function Contact() {
             <div>
               <label
                 htmlFor="contact-subject"
-                style={{
-                  display: 'block',
-                  fontSize: '0.78rem',
-                  color: 'var(--text-muted)',
-                  fontFamily: 'var(--font-mono)',
-                  marginBottom: '0.4rem',
-                }}
+                className="block text-xs font-mono text-[var(--text-muted)] mb-1.5 uppercase tracking-wider"
               >
                 SUBJECT
               </label>
-              <input
+              <Input
                 id="contact-subject"
                 type="text"
                 required
                 placeholder="Software Engineering Internship / Project"
                 value={formData.subject}
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem',
-                  borderRadius: 'var(--radius-sm)',
-                  background: 'rgba(7, 4, 13, 0.75)',
-                  border: '1px solid rgba(139, 92, 246, 0.25)',
-                  color: '#ffffff',
-                  fontSize: '0.9rem',
-                  outline: 'none',
-                  transition: 'border-color 0.2s ease',
-                }}
+                className="h-10 bg-[#07040d]/75 border-violet-500/25 focus-visible:border-violet-400 focus-visible:ring-violet-400/30 text-white placeholder:text-muted-foreground text-sm"
               />
             </div>
 
             <div>
               <label
                 htmlFor="contact-message"
-                style={{
-                  display: 'block',
-                  fontSize: '0.78rem',
-                  color: 'var(--text-muted)',
-                  fontFamily: 'var(--font-mono)',
-                  marginBottom: '0.4rem',
-                }}
+                className="block text-xs font-mono text-[var(--text-muted)] mb-1.5 uppercase tracking-wider"
               >
                 MESSAGE
               </label>
-              <textarea
+              <Textarea
                 id="contact-message"
                 required
                 rows={4}
                 placeholder="Hi Radhika, I came across your portfolio and wanted to reach out regarding..."
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem',
-                  borderRadius: 'var(--radius-sm)',
-                  background: 'rgba(7, 4, 13, 0.75)',
-                  border: '1px solid rgba(139, 92, 246, 0.25)',
-                  color: '#ffffff',
-                  fontSize: '0.9rem',
-                  outline: 'none',
-                  resize: 'vertical',
-                  fontFamily: 'inherit',
-                  transition: 'border-color 0.2s ease',
-                }}
+                className="min-h-28 bg-[#07040d]/75 border-violet-500/25 focus-visible:border-violet-400 focus-visible:ring-violet-400/30 text-white placeholder:text-muted-foreground resize-y text-sm font-sans"
               />
             </div>
 
-            <button
+            {/* shadcn Button for Form Submit */}
+            <Button
               type="submit"
               data-cursor="Open"
-              style={{
-                marginTop: '0.5rem',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                padding: '0.85rem 1.6rem',
-                borderRadius: 'var(--radius-full)',
-                background: 'linear-gradient(135deg, var(--color-violet), #6d28d9)',
-                color: '#ffffff',
-                fontWeight: 600,
-                fontSize: '0.95rem',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 0 24px rgba(139, 92, 246, 0.4)',
-                transition: 'all 0.2s ease',
-              }}
+              className="mt-2 w-full sm:w-auto self-start rounded-full bg-gradient-to-r from-[var(--color-violet)] to-[#6d28d9] text-white hover:opacity-90 shadow-[0_0_24px_rgba(139,92,246,0.4)] px-6 py-2.5 text-sm font-semibold gap-2 transition-all cursor-pointer"
             >
               <span>Send Message</span>
-              <Send size={16} />
-            </button>
+              <Send size={15} />
+            </Button>
           </form>
         </motion.div>
       </div>
