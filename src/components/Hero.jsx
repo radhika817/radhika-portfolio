@@ -5,6 +5,7 @@ import { personalInfo } from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import MagneticButton from './MagneticButton'
 import { Button } from '@/components/ui/button'
+import HeroAurora from './HeroAurora'
 
 const Avatar3D = lazy(() => import('./Avatar3D'))
 
@@ -268,8 +269,8 @@ export default function Hero() {
             minHeight: '440px',
           }}
         >
-          {/* Animated Aurora Glow behind Avatar */}
-          <div className="hero-aurora-glow" aria-hidden="true" />
+          {/* 21st.dev inspired Aurora and Spotlight effect */}
+          <HeroAurora />
 
           {/* Floating Ambient Particles */}
           {!prefersReducedMotion && (
