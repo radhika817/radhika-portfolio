@@ -16,16 +16,6 @@
       "env": {
         "API_KEY": "${API_KEY_21ST}"
       }
-    },
-    "figma": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "figma-developer-mcp"
-      ],
-      "env": {
-        "FIGMA_API_KEY": "${FIGMA_API_KEY}"
-      }
     }
   }
 }
