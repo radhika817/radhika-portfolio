@@ -35,7 +35,7 @@ export function TimelineIcon({ className, children, ...props }) {
   return (
     <div
       className={cn(
-        "relative z-10 flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-xl bg-[#0d0718] border border-violet-500/30 text-violet-300 shadow-[0_0_15px_rgba(139,92,246,0.3)] group-hover:scale-105 transition-transform",
+        "relative z-10 flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-xl bg-[#0d0718] border border-violet-500/30 text-violet-300 shadow-[0_0_15px_rgba(139,92,246,0.3)] group-hover:scale-105 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
         className
       )}
       {...props}
@@ -49,7 +49,7 @@ export function TimelineContent({ className, children, ...props }) {
   return (
     <div
       className={cn(
-        "flex-1 rounded-xl bg-[#130b24]/75 border border-violet-500/20 p-5 md:p-6 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-all hover:border-violet-400/40",
+        "flex-1 rounded-xl bg-[#130b24]/75 border border-violet-500/20 p-5 md:p-6 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-violet-400/40",
         className
       )}
       {...props}

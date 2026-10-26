@@ -235,7 +235,7 @@ export default function Skills() {
               initial={prefersReducedMotion ? false : { opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.45 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 position: 'relative',
                 background: 'rgba(19, 11, 36, 0.65)',
@@ -246,7 +246,7 @@ export default function Skills() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                transition: 'all 0.25s ease',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
             >
               <div>

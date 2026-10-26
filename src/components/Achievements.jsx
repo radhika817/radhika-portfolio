@@ -180,10 +180,13 @@ export default function Achievements() {
         initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
       >
-        <div className="bg-[#130b24]/70 border border-amber-500/30 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+        <div
+          data-cursor="View"
+          className="bg-[#130b24]/70 border border-amber-500/30 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:border-amber-400/50 hover:bg-[#180d2f] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none cursor-pointer"
+        >
           <div className="text-2xl md:text-3xl font-extrabold text-amber-400 font-display mb-1">
             <AnimatedCounter end={100} suffix=" Teams" />
           </div>
@@ -192,7 +195,10 @@ export default function Achievements() {
           </div>
         </div>
 
-        <div className="bg-[#130b24]/70 border border-violet-500/25 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+        <div
+          data-cursor="View"
+          className="bg-[#130b24]/70 border border-violet-500/25 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:border-violet-400/50 hover:bg-[#180d2f] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none cursor-pointer"
+        >
           <div className="text-2xl md:text-3xl font-extrabold text-[var(--color-violet-light)] font-display mb-1">
             <AnimatedCounter end={500} suffix="+ Devs" />
           </div>
@@ -201,7 +207,10 @@ export default function Achievements() {
           </div>
         </div>
 
-        <div className="bg-[#130b24]/70 border border-sky-400/25 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+        <div
+          data-cursor="View"
+          className="bg-[#130b24]/70 border border-sky-400/25 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:border-sky-400/50 hover:bg-[#180d2f] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none cursor-pointer"
+        >
           <div className="text-2xl md:text-3xl font-extrabold text-sky-400 font-display mb-1">
             <AnimatedCounter end={400} suffix="+ Teams" />
           </div>
@@ -210,7 +219,10 @@ export default function Achievements() {
           </div>
         </div>
 
-        <div className="bg-[#130b24]/70 border border-emerald-400/25 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+        <div
+          data-cursor="View"
+          className="bg-[#130b24]/70 border border-emerald-400/25 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:border-emerald-400/50 hover:bg-[#180d2f] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none cursor-pointer"
+        >
           <div className="text-2xl md:text-3xl font-extrabold text-emerald-400 font-display mb-1">
             <AnimatedCounter end={1000} suffix="+ Pool" />
           </div>
@@ -233,10 +245,11 @@ export default function Achievements() {
               initial={prefersReducedMotion ? false : { opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
               <TimelineItem>
                 <TimelineIcon
+                  data-cursor="View"
                   style={{
                     backgroundColor: isWinner ? 'rgba(245, 158, 11, 0.16)' : '#0d0718',
                     borderColor: config.border,
