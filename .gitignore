@@ -14,10 +14,20 @@ node_modules/
 dist/
 dist-ssr/
 
-# Local env files
+# Local env, secrets, and local MCP configurations
 .env
+.env*
+!.env.example
 .env.local
 .env.*.local
+*.local
+*.local.json
+*local.json
+mcp_config.local.json
+.agents/mcp_config.local.json
+mcp_local.json
+credentials.json
+secrets/
 
 # Editor directories and files
 .vscode/*
