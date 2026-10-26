@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { ExternalLink, Trophy, CheckCircle2, ShieldCheck, Cpu, Clock } from 'lucide-react'
 
 function GithubIcon({ size = 16, ...props }) {
@@ -189,12 +190,21 @@ export default function ProjectCaseStudyModal({ project, isOpen, onClose }) {
               </a>
             </Button>
           ) : (
-            <span
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[var(--text-muted)] text-xs font-mono cursor-not-allowed select-none"
-            >
-              <Clock size={14} />
-              <span>Live Demo Coming Soon</span>
-            </span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span
+                  tabIndex={0}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[var(--text-muted)] text-xs font-mono cursor-not-allowed select-none"
+                  aria-label="Live demo coming soon"
+                >
+                  <Clock size={14} />
+                  <span>Live Demo Coming Soon</span>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className="bg-[#180d2f] text-[var(--color-lavender)] border border-violet-500/30 text-xs font-mono shadow-lg">
+                <p>Deployment link coming soon</p>
+              </TooltipContent>
+            </Tooltip>
           )}
 
           {isGithubValid ? (
@@ -214,12 +224,21 @@ export default function ProjectCaseStudyModal({ project, isOpen, onClose }) {
               </a>
             </Button>
           ) : (
-            <span
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[var(--text-muted)] text-xs font-mono cursor-not-allowed select-none"
-            >
-              <GithubIcon size={14} style={{ opacity: 0.5 }} />
-              <span>Repository Coming Soon</span>
-            </span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span
+                  tabIndex={0}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[var(--text-muted)] text-xs font-mono cursor-not-allowed select-none"
+                  aria-label="Repository link coming soon"
+                >
+                  <GithubIcon size={14} style={{ opacity: 0.5 }} />
+                  <span>Repository Coming Soon</span>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className="bg-[#180d2f] text-[var(--color-lavender)] border border-violet-500/30 text-xs font-mono shadow-lg">
+                <p>Repository link being finalized</p>
+              </TooltipContent>
+            </Tooltip>
           )}
         </DialogFooter>
       </DialogContent>

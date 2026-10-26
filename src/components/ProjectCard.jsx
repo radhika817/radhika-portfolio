@@ -5,6 +5,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 import { usePointerType } from '../hooks/usePointerType'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 
 function GithubIcon({ size = 14, ...props }) {
   return (
@@ -404,26 +405,34 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                 <ExternalLink size={13} />
               </a>
             ) : (
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.42rem 0.8rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  color: 'var(--text-muted)',
-                  fontSize: '0.78rem',
-                  fontFamily: 'var(--font-mono)',
-                  cursor: 'not-allowed',
-                  userSelect: 'none',
-                }}
-                title="Live demo deployment coming soon"
-              >
-                <Clock size={12} />
-                <span>Demo coming soon</span>
-              </span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    tabIndex={0}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      padding: '0.42rem 0.8rem',
+                      borderRadius: 'var(--radius-full)',
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      color: 'var(--text-muted)',
+                      fontSize: '0.78rem',
+                      fontFamily: 'var(--font-mono)',
+                      cursor: 'not-allowed',
+                      userSelect: 'none',
+                    }}
+                    aria-label="Live demo coming soon"
+                  >
+                    <Clock size={12} />
+                    <span>Demo coming soon</span>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent className="bg-[#180d2f] text-[var(--color-lavender)] border border-violet-500/30 text-xs font-mono shadow-lg">
+                  <p>Deployment link coming soon</p>
+                </TooltipContent>
+              </Tooltip>
             )}
 
             {/* GitHub Repo Button / Coming Soon */}
@@ -452,26 +461,34 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                 <span>Source</span>
               </a>
             ) : (
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.42rem 0.8rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  color: 'var(--text-muted)',
-                  fontSize: '0.78rem',
-                  fontFamily: 'var(--font-mono)',
-                  cursor: 'not-allowed',
-                  userSelect: 'none',
-                }}
-                title="Repository link being finalized"
-              >
-                <GithubIcon size={13} style={{ opacity: 0.5 }} />
-                <span>Repo coming soon</span>
-              </span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    tabIndex={0}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      padding: '0.42rem 0.8rem',
+                      borderRadius: 'var(--radius-full)',
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      color: 'var(--text-muted)',
+                      fontSize: '0.78rem',
+                      fontFamily: 'var(--font-mono)',
+                      cursor: 'not-allowed',
+                      userSelect: 'none',
+                    }}
+                    aria-label="Repository link coming soon"
+                  >
+                    <GithubIcon size={13} style={{ opacity: 0.5 }} />
+                    <span>Repo coming soon</span>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent className="bg-[#180d2f] text-[var(--color-lavender)] border border-violet-500/30 text-xs font-mono shadow-lg">
+                  <p>Repository link being finalized</p>
+                </TooltipContent>
+              </Tooltip>
             )}
 
             {/* Case Study Trigger */}
