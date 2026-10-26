@@ -301,6 +301,22 @@ body.custom-cursor-active select {
   animation: auroraReverse 22s ease-in-out infinite;
 }
 
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-flow {
+  animation: gradientFlow 8s ease infinite;
+}
+
 /* Mouse Scroll Indicator */
 .mouse-scroll-pill {
   width: 22px;

@@ -6,6 +6,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 import MagneticButton from './MagneticButton'
 import { Button } from '@/components/ui/button'
 import HeroAurora from './HeroAurora'
+import AnimatedHeroHeading from './AnimatedHeroHeading'
 
 const Avatar3D = lazy(() => import('./Avatar3D'))
 
@@ -130,22 +131,10 @@ export default function Hero() {
             </span>
           </div>
 
-          {/* Name Header */}
-          <h1
-            style={{
-              fontSize: 'clamp(2.75rem, 5.5vw, 4.5rem)',
-              fontWeight: 800,
-              lineHeight: 1.08,
-              letterSpacing: '-0.03em',
-              background: 'linear-gradient(135deg, #ffffff 10%, #d8b4fe 55%, #8b5cf6 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
-            {personalInfo.name}
-          </h1>
+          {/* 21st.dev inspired Animated Text Reveal Heading */}
+          <AnimatedHeroHeading name={personalInfo.name} />
 
-          {/* Typewriter Role Line */}
+          {/* Typewriter Role Line with animated gradient highlight */}
           <div
             style={{
               fontFamily: 'var(--font-mono)',
@@ -157,14 +146,26 @@ export default function Hero() {
               minHeight: '2rem',
             }}
           >
-            <span>{displayedRole}</span>
+            <span
+              className={prefersReducedMotion ? '' : 'animate-gradient-flow'}
+              style={{
+                backgroundImage:
+                  'linear-gradient(135deg, var(--color-lavender) 0%, var(--color-violet-light) 50%, #ffffff 100%)',
+                backgroundSize: '200% auto',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              {displayedRole}
+            </span>
             <span
               style={{
                 display: 'inline-block',
-                marginLeft: '2px',
-                width: '2px',
+                marginLeft: '4px',
+                width: '2.5px',
                 height: '1.2em',
                 backgroundColor: 'var(--color-violet-light)',
+                boxShadow: '0 0 8px var(--color-violet)',
                 opacity: isTypingDone ? 0.7 : 1,
                 animation: prefersReducedMotion ? 'none' : 'blink 1s step-end infinite',
               }}
