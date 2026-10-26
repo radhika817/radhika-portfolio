@@ -4,6 +4,7 @@ import { ArrowDown, FileText, Mail } from 'lucide-react'
 import { personalInfo } from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import MagneticButton from './MagneticButton'
+import { Button } from '@/components/ui/button'
 
 const Avatar3D = lazy(() => import('./Avatar3D'))
 
@@ -194,82 +195,62 @@ export default function Hero() {
           >
             {/* View Projects */}
             <MagneticButton>
-              <a
-                href="#projects"
-                data-cursor="View"
-                className="hero-cta-btn"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.85rem 1.6rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'linear-gradient(135deg, var(--color-violet) 0%, #6d28d9 100%)',
-                  color: '#ffffff',
-                  fontWeight: 600,
-                  fontSize: '0.95rem',
-                  boxShadow: '0 0 24px rgba(139, 92, 246, 0.45)',
-                  transition: 'all 0.25s ease',
-                  border: '1px solid rgba(196, 181, 253, 0.4)',
-                }}
+              <Button
+                asChild
+                variant="default"
+                size="lg"
+                className="rounded-full bg-gradient-to-r from-[var(--color-violet)] to-[#6d28d9] text-white font-semibold text-sm shadow-[0_0_24px_rgba(139,92,246,0.45)] border border-[rgba(196,181,253,0.4)] hover:brightness-110 hover:shadow-[0_0_32px_rgba(139,92,246,0.6)] px-6 py-3.5 h-auto transition-all"
               >
-                <span>View Projects</span>
-                <ArrowDown size={17} />
-              </a>
+                <a
+                  href="#projects"
+                  data-cursor="View"
+                  className="hero-cta-btn inline-flex items-center gap-2"
+                >
+                  <span>View Projects</span>
+                  <ArrowDown size={17} />
+                </a>
+              </Button>
             </MagneticButton>
 
             {/* Download Resume */}
             <MagneticButton>
-              <a
-                href={personalInfo.resumeUrl}
-                download="Radhika_Kandalkar_Resume.pdf"
-                target="_blank"
-                rel="noreferrer"
-                data-cursor="Open"
-                className="hero-cta-btn"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.85rem 1.5rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(139, 92, 246, 0.1)',
-                  color: 'var(--color-lavender)',
-                  fontWeight: 600,
-                  fontSize: '0.95rem',
-                  border: '1px solid var(--border-medium)',
-                  backdropFilter: 'blur(8px)',
-                  transition: 'all 0.25s ease',
-                }}
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="rounded-full bg-[rgba(139,92,246,0.1)] text-[var(--color-lavender)] font-semibold text-sm border-[var(--border-medium)] backdrop-blur-md hover:bg-[rgba(139,92,246,0.2)] hover:text-white px-6 py-3.5 h-auto transition-all"
               >
-                <FileText size={17} />
-                <span>Download Resume</span>
-              </a>
+                <a
+                  href={personalInfo.resumeUrl}
+                  download="Radhika_Kandalkar_Resume.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  data-cursor="Open"
+                  className="hero-cta-btn inline-flex items-center gap-2"
+                >
+                  <FileText size={17} />
+                  <span>Download Resume</span>
+                </a>
+              </Button>
             </MagneticButton>
 
             {/* Contact Me */}
             <MagneticButton>
-              <a
-                href="#contact"
-                data-cursor="Open"
-                className="hero-cta-btn"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.85rem 1.4rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  color: 'var(--text-secondary)',
-                  fontWeight: 500,
-                  fontSize: '0.95rem',
-                  border: '1px solid var(--border-glass)',
-                  transition: 'all 0.25s ease',
-                }}
+              <Button
+                asChild
+                variant="ghost"
+                size="lg"
+                className="rounded-full bg-[rgba(255,255,255,0.04)] text-[var(--text-secondary)] font-medium text-sm border border-[var(--border-glass)] hover:bg-[rgba(255,255,255,0.08)] hover:text-white px-6 py-3.5 h-auto transition-all"
               >
-                <Mail size={17} />
-                <span>Contact Me</span>
-              </a>
+                <a
+                  href="#contact"
+                  data-cursor="Open"
+                  className="hero-cta-btn inline-flex items-center gap-2"
+                >
+                  <Mail size={17} />
+                  <span>Contact Me</span>
+                </a>
+              </Button>
             </MagneticButton>
           </div>
         </motion.div>

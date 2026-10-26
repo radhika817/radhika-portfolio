@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { personalInfo } from '../data/content'
 import MagneticButton from './MagneticButton'
 import MobileMenu from './MobileMenu'
+import { Button } from '@/components/ui/button'
 
 export const NAV_LINKS = [
   { name: 'About', href: '#about' },
@@ -167,31 +168,24 @@ export default function Navbar({ activeSection }) {
             {/* Desktop Resume CTA */}
             <div className="desktop-resume-btn">
               <MagneticButton>
-                <a
-                  href={personalInfo.resumeUrl}
-                  download="Radhika_Kandalkar_Resume.pdf"
-                  target="_blank"
-                  rel="noreferrer"
-                  data-cursor="Open"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.45rem',
-                    padding: '0.5rem 1.1rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(139, 92, 246, 0.12)',
-                    border: '1px solid var(--border-medium)',
-                    color: 'var(--color-lavender)',
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    backdropFilter: 'blur(8px)',
-                    transition: 'all 0.2s ease',
-                  }}
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full bg-[rgba(139,92,246,0.12)] border-[var(--border-medium)] text-[var(--color-lavender)] hover:bg-[rgba(139,92,246,0.22)] hover:text-white backdrop-blur-md px-4 py-2 h-auto text-xs font-semibold tracking-wide transition-all shadow-[0_0_12px_rgba(139,92,246,0.15)]"
                 >
-                  <FileText size={15} />
-                  <span>Resume</span>
-                </a>
+                  <a
+                    href={personalInfo.resumeUrl}
+                    download="Radhika_Kandalkar_Resume.pdf"
+                    target="_blank"
+                    rel="noreferrer"
+                    data-cursor="Open"
+                    className="inline-flex items-center gap-1.5"
+                  >
+                    <FileText size={14} />
+                    <span>Resume</span>
+                  </a>
+                </Button>
               </MagneticButton>
             </div>
 
