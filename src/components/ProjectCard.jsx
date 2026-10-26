@@ -3,6 +3,8 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { ExternalLink, Trophy, Clock, Route, BrainCircuit, Blocks } from 'lucide-react'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { usePointerType } from '../hooks/usePointerType'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 function GithubIcon({ size = 14, ...props }) {
   return (
@@ -136,20 +138,12 @@ function ProjectVisualBanner({ project }) {
         >
           {config.icon}
         </div>
-        <span
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.72rem',
-            color: 'var(--text-primary)',
-            background: 'rgba(7, 4, 13, 0.65)',
-            padding: '0.2rem 0.6rem',
-            borderRadius: 'var(--radius-full)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(8px)',
-          }}
+        <Badge
+          variant="outline"
+          className="font-mono text-[0.72rem] text-[var(--text-primary)] bg-[rgba(7,4,13,0.65)] px-2.5 py-0.5 rounded-full border border-white/10 backdrop-blur-md"
         >
           {config.tag}
-        </span>
+        </Badge>
       </div>
 
       {/* Bottom Row Tag */}
@@ -291,22 +285,9 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
           }}
         />
 
-        {/* Internal Content Container */}
-        <div
-          style={{
-            position: 'relative',
-            zIndex: 1,
-            background: 'var(--bg-card)',
-            borderRadius: 'calc(var(--radius-lg) - 1px)',
-            padding: '1.75rem',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            overflow: 'hidden',
-            backdropFilter: 'blur(10px)',
-            transform: 'translateZ(15px)',
-          }}
+        {/* Internal Content Container using shadcn Card */}
+        <Card
+          className="relative z-1 flex flex-col justify-between h-full overflow-hidden p-7 border-0 bg-[var(--bg-card)] backdrop-blur-md ring-0 text-card-foreground transform-[translateZ(15px)] gap-0"
         >
           {/* Subtle interior spotlight sheen */}
           {shouldTilt && (
@@ -329,126 +310,73 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
             <ProjectVisualBanner project={project} />
 
             {/* Top row: Award Badge or category */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '0.85rem',
-                minHeight: '26px',
-              }}
-            >
+            <div className="flex items-center justify-between mb-3 min-h-[26px]">
               {hasAward ? (
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    padding: '0.25rem 0.75rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(245, 158, 11, 0.14)',
-                    border: '1px solid rgba(245, 158, 11, 0.4)',
-                    color: '#fbbf24',
-                    fontSize: '0.78rem',
-                    fontWeight: 600,
-                    fontFamily: 'var(--font-mono)',
-                    boxShadow: '0 0 15px rgba(245, 158, 11, 0.25)',
-                  }}
+                <Badge
+                  variant="outline"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border-amber-500/40 text-amber-400 font-mono text-xs font-semibold shadow-[0_0_15px_rgba(245,158,11,0.25)]"
                 >
-                  <Trophy size={14} color="#f59e0b" />
+                  <Trophy size={14} className="text-amber-500" />
                   <span>1st Place, Sinhgad Hackathon 2026</span>
-                </div>
+                </Badge>
               ) : (
-                <span
-                  style={{
-                    fontSize: '0.75rem',
-                    fontFamily: 'var(--font-mono)',
-                    color: 'var(--text-muted)',
-                    letterSpacing: '0.06em',
-                  }}
+                <Badge
+                  variant="outline"
+                  className="font-mono text-xs tracking-wider text-muted-foreground border-transparent px-0 bg-transparent font-normal"
                 >
                   FEATURED WORK
-                </span>
+                </Badge>
               )}
             </div>
 
             {/* Header: Title and Subtitle */}
-            <div style={{ marginBottom: '0.85rem' }}>
-              <h3
-                style={{
-                  fontSize: '1.45rem',
-                  fontWeight: 700,
-                  color: 'var(--text-primary)',
-                  letterSpacing: '-0.02em',
-                  marginBottom: '0.25rem',
-                }}
-              >
+            <CardHeader className="p-0 gap-1 mb-3">
+              <CardTitle className="text-2xl font-bold tracking-tight text-[var(--text-primary)] font-heading">
                 {project.title}
-              </h3>
+              </CardTitle>
+              <CardDescription className="text-sm font-mono text-[var(--color-violet-light)] font-medium">
+                {project.subtitle}
+              </CardDescription>
+            </CardHeader>
+
+            {/* Project Description and Tech Chips */}
+            <CardContent className="p-0">
               <p
                 style={{
-                  fontSize: '0.88rem',
-                  fontFamily: 'var(--font-mono)',
-                  color: 'var(--color-violet-light)',
-                  fontWeight: 500,
+                  color: 'var(--text-secondary)',
+                  fontSize: '0.92rem',
+                  lineHeight: 1.6,
+                  marginBottom: '1.25rem',
                 }}
               >
-                {project.subtitle}
+                {project.description}
               </p>
-            </div>
 
-            {/* Project Description */}
-            <p
-              style={{
-                color: 'var(--text-secondary)',
-                fontSize: '0.92rem',
-                lineHeight: 1.6,
-                marginBottom: '1.25rem',
-              }}
-            >
-              {project.description}
-            </p>
-
-            {/* Tech Stack Chips */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '0.45rem',
-                marginBottom: '1.5rem',
-              }}
-            >
-              {project.tech.map((tech) => (
-                <span
-                  key={tech}
-                  style={{
-                    fontSize: '0.75rem',
-                    fontFamily: 'var(--font-mono)',
-                    padding: '0.22rem 0.6rem',
-                    borderRadius: 'var(--radius-xs)',
-                    background: 'rgba(139, 92, 246, 0.12)',
-                    color: 'var(--color-lavender)',
-                    border: '1px solid rgba(139, 92, 246, 0.22)',
-                  }}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
+              {/* Tech Stack Chips using shadcn Badge */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '0.45rem',
+                  marginBottom: '1.5rem',
+                }}
+              >
+                {project.tech.map((tech) => (
+                  <Badge
+                    key={tech}
+                    variant="secondary"
+                    className="text-xs font-mono px-2.5 py-0.5 rounded-[var(--radius-xs)] bg-violet-500/12 text-[var(--color-lavender)] border border-violet-500/20 hover:bg-violet-500/20 transition-colors"
+                  >
+                    {tech}
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
           </div>
 
-          {/* Action Links Bar */}
-          <div
-            style={{
-              position: 'relative',
-              zIndex: 2,
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '0.6rem',
-              alignItems: 'center',
-              borderTop: '1px solid rgba(139, 92, 246, 0.12)',
-              paddingTop: '1.25rem',
-            }}
+          {/* Action Links Bar / CardFooter */}
+          <CardFooter
+            className="relative z-2 flex flex-wrap gap-2.5 items-center border-t border-violet-500/15 pt-5 px-0 pb-0 bg-transparent rounded-none"
           >
             {/* Live Demo Button / Coming Soon */}
             {isLiveDemoValid ? (
@@ -573,8 +501,8 @@ export default function ProjectCard({ project, onOpenCaseStudy }) {
                 <span>Case Study →</span>
               </button>
             )}
-          </div>
-        </div>
+          </CardFooter>
+        </Card>
       </motion.article>
     </div>
   )
