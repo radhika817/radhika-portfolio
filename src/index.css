@@ -317,6 +317,19 @@ body.custom-cursor-active select {
   animation: gradientFlow 8s ease infinite;
 }
 
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap, 1rem)));
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration, 38s) linear infinite;
+}
+
 /* Mouse Scroll Indicator */
 .mouse-scroll-pill {
   width: 22px;

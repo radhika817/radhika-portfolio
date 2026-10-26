@@ -9,10 +9,11 @@ import {
   Cloud,
   Binary,
   Sparkles,
-  Zap,
 } from 'lucide-react'
 import { skillsData } from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { Marquee } from '@/components/ui/marquee'
+import { Badge } from '@/components/ui/badge'
 
 export const SKILL_CATEGORIES = [
   {
@@ -102,83 +103,54 @@ export const MARQUEE_ITEMS = [
 ]
 
 /**
- * Infinite Tech Marquee Row
+ * 21st.dev inspired Dual-Row Infinite Marquee with edge-fade gradient masks
  */
-function TechMarquee() {
-  // Duplicate array twice to ensure seamless continuous loop
-  const marqueeList = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
+function TechMarquee({ prefersReducedMotion }) {
+  const row1 = MARQUEE_ITEMS.slice(0, 9)
+  const row2 = MARQUEE_ITEMS.slice(9)
+
+  const renderBadge = (item, idx) => (
+    <div
+      key={`${item.name}-${idx}`}
+      data-cursor="View"
+      className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#130b24]/90 border border-violet-500/25 hover:border-violet-400/60 hover:bg-[#180d2f] text-sm shadow-[0_4px_14px_rgba(0,0,0,0.3)] shrink-0 transition-all select-none"
+    >
+      <span
+        className="w-2 h-2 rounded-full shrink-0 shadow-[0_0_8px_currentColor]"
+        style={{ backgroundColor: item.color, color: item.color }}
+      />
+      <span className="font-semibold text-slate-100 text-xs sm:text-sm">
+        {item.name}
+      </span>
+      <span className="text-[0.72rem] font-mono text-[var(--color-violet-light)] border-l border-white/10 pl-2">
+        {item.category}
+      </span>
+    </div>
+  )
+
+  if (prefersReducedMotion) {
+    return (
+      <div className="my-8 p-4 rounded-xl bg-[#0d0718]/40 border border-violet-500/15 flex flex-wrap gap-2.5 justify-center">
+        {MARQUEE_ITEMS.map((item, idx) => renderBadge(item, idx))}
+      </div>
+    )
+  }
 
   return (
-    <div
-      style={{
-        margin: '2.5rem 0 3.5rem',
-        padding: '1rem 0',
-        background: 'rgba(13, 7, 24, 0.4)',
-        borderTop: '1px solid rgba(139, 92, 246, 0.12)',
-        borderBottom: '1px solid rgba(139, 92, 246, 0.12)',
-        borderRadius: 'var(--radius-md)',
-      }}
-    >
-      <div className="tech-marquee-container" data-cursor="Drag">
-        <div className="tech-marquee-track">
-          {marqueeList.map((item, idx) => (
-            <div
-              key={`${item.name}-${idx}`}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                padding: '0.55rem 1.1rem',
-                borderRadius: 'var(--radius-full)',
-                background: 'rgba(19, 11, 36, 0.8)',
-                border: '1px solid rgba(139, 92, 246, 0.2)',
-                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <span
-                style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  background: item.color,
-                  boxShadow: `0 0 8px ${item.color}`,
-                  display: 'inline-block',
-                }}
-              />
-              <span
-                style={{
-                  color: 'var(--text-primary)',
-                  fontWeight: 600,
-                  fontSize: '0.88rem',
-                  letterSpacing: '0.01em',
-                }}
-              >
-                {item.name}
-              </span>
-              <span
-                style={{
-                  color: 'var(--text-faint)',
-                  fontSize: '0.72rem',
-                  fontFamily: 'var(--font-mono)',
-                  borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
-                  paddingLeft: '0.5rem',
-                }}
-              >
-                {item.category}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="relative flex flex-col gap-3 w-full overflow-hidden my-8 py-3 rounded-xl bg-[#0d0718]/40 border border-violet-500/15 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+      <Marquee pauseOnHover repeat={4} className="[--duration:36s]">
+        {row1.map((item, idx) => renderBadge(item, idx))}
+      </Marquee>
+      <Marquee reverse pauseOnHover repeat={4} className="[--duration:40s]">
+        {row2.map((item, idx) => renderBadge(item, idx))}
+      </Marquee>
     </div>
   )
 }
 
 /**
  * Skills Section with grouped categories, animated hover glow chips,
- * and an infinite tech marquee row.
+ * and 21st.dev inspired dual-direction tech marquee.
  */
 export default function Skills() {
   const prefersReducedMotion = useReducedMotion()
@@ -242,8 +214,8 @@ export default function Skills() {
         </p>
       </motion.div>
 
-      {/* Infinite Tech Marquee Row */}
-      <TechMarquee />
+      {/* 21st.dev inspired Infinite Tech Marquee */}
+      <TechMarquee prefersReducedMotion={prefersReducedMotion} />
 
       {/* Grouped Categories Grid */}
       <div
@@ -325,20 +297,15 @@ export default function Skills() {
                       </p>
                     </div>
                   </div>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '0.72rem',
-                      color: category.accent,
-                      background: 'rgba(139, 92, 246, 0.08)',
-                      padding: '0.2rem 0.55rem',
-                      borderRadius: 'var(--radius-full)',
-                      border: '1px solid rgba(139, 92, 246, 0.18)',
-                      whiteSpace: 'nowrap',
-                    }}
+
+                  {/* shadcn Badge for Category counter */}
+                  <Badge
+                    variant="outline"
+                    className="font-mono text-xs font-semibold px-2.5 py-0.5 rounded-full border border-violet-500/25 bg-violet-500/10"
+                    style={{ color: category.accent }}
                   >
                     {category.badge}
-                  </span>
+                  </Badge>
                 </div>
 
                 {/* Skill Chips with Hover Glow and Motion */}
@@ -361,7 +328,7 @@ export default function Skills() {
                         whileHover={
                           prefersReducedMotion
                             ? {}
-                            : { y: -2, scale: 1.04 }
+                            : { y: -2, scale: 1.05 }
                         }
                         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                         style={{
@@ -378,13 +345,14 @@ export default function Skills() {
                             : 'var(--text-secondary)',
                           border: `1px solid ${
                             isHovered
-                              ? 'rgba(167, 139, 250, 0.55)'
+                              ? category.accent
                               : 'rgba(255, 255, 255, 0.08)'
                           }`,
                           boxShadow: isHovered
                             ? `0 0 16px ${category.accent}44`
                             : 'none',
                           userSelect: 'none',
+                          cursor: 'pointer',
                         }}
                       >
                         {skill}
