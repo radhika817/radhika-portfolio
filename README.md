@@ -11,6 +11,11 @@ A highly animated, interactive developer portfolio built with **React + Vite**. 
 
 > **Design direction:** Violet After Dark — immersive spatial motion, cursor-driven spotlights, interactive terminal, and engineering case studies detailing real technical decisions.
 
+## Design System Upgrade
+
+Currently enhancing the portfolio's UI architecture on branch `feature/mcp-design-upgrade` with an MCP-assisted design system upgrade. This integrates Tailwind CSS and accessible shadcn/ui components mapped directly to the signature **Violet After Dark** design tokens (midnight surfaces, vibrant violet primary, lavender accents, and luminous glassmorphic borders) while preserving existing custom styling, performance optimizations, and spatial animations.
+
+
 ## Screenshots & Visual Showcase
 
 | View | Highlights | Visual Preview |

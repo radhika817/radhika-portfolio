@@ -4,6 +4,9 @@ import { ArrowDown, FileText, Mail } from 'lucide-react'
 import { personalInfo } from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import MagneticButton from './MagneticButton'
+import { Button } from '@/components/ui/button'
+import HeroAurora from './HeroAurora'
+import AnimatedHeroHeading from './AnimatedHeroHeading'
 
 const Avatar3D = lazy(() => import('./Avatar3D'))
 
@@ -128,22 +131,10 @@ export default function Hero() {
             </span>
           </div>
 
-          {/* Name Header */}
-          <h1
-            style={{
-              fontSize: 'clamp(2.75rem, 5.5vw, 4.5rem)',
-              fontWeight: 800,
-              lineHeight: 1.08,
-              letterSpacing: '-0.03em',
-              background: 'linear-gradient(135deg, #ffffff 10%, #d8b4fe 55%, #8b5cf6 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
-            {personalInfo.name}
-          </h1>
+          {/* 21st.dev inspired Animated Text Reveal Heading */}
+          <AnimatedHeroHeading name={personalInfo.name} />
 
-          {/* Typewriter Role Line */}
+          {/* Typewriter Role Line with animated gradient highlight */}
           <div
             style={{
               fontFamily: 'var(--font-mono)',
@@ -155,14 +146,26 @@ export default function Hero() {
               minHeight: '2rem',
             }}
           >
-            <span>{displayedRole}</span>
+            <span
+              className={prefersReducedMotion ? '' : 'animate-gradient-flow'}
+              style={{
+                backgroundImage:
+                  'linear-gradient(135deg, var(--color-lavender) 0%, var(--color-violet-light) 50%, #ffffff 100%)',
+                backgroundSize: '200% auto',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              {displayedRole}
+            </span>
             <span
               style={{
                 display: 'inline-block',
-                marginLeft: '2px',
-                width: '2px',
+                marginLeft: '4px',
+                width: '2.5px',
                 height: '1.2em',
                 backgroundColor: 'var(--color-violet-light)',
+                boxShadow: '0 0 8px var(--color-violet)',
                 opacity: isTypingDone ? 0.7 : 1,
                 animation: prefersReducedMotion ? 'none' : 'blink 1s step-end infinite',
               }}
@@ -194,82 +197,62 @@ export default function Hero() {
           >
             {/* View Projects */}
             <MagneticButton>
-              <a
-                href="#projects"
-                data-cursor="View"
-                className="hero-cta-btn"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.85rem 1.6rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'linear-gradient(135deg, var(--color-violet) 0%, #6d28d9 100%)',
-                  color: '#ffffff',
-                  fontWeight: 600,
-                  fontSize: '0.95rem',
-                  boxShadow: '0 0 24px rgba(139, 92, 246, 0.45)',
-                  transition: 'all 0.25s ease',
-                  border: '1px solid rgba(196, 181, 253, 0.4)',
-                }}
+              <Button
+                asChild
+                variant="default"
+                size="lg"
+                className="rounded-full bg-gradient-to-r from-[var(--color-violet)] to-[#6d28d9] text-white font-semibold text-sm shadow-[0_0_24px_rgba(139,92,246,0.45)] border border-[rgba(196,181,253,0.4)] hover:brightness-110 hover:shadow-[0_0_32px_rgba(139,92,246,0.6)] px-6 py-3.5 h-auto transition-all"
               >
-                <span>View Projects</span>
-                <ArrowDown size={17} />
-              </a>
+                <a
+                  href="#projects"
+                  data-cursor="View"
+                  className="hero-cta-btn inline-flex items-center gap-2"
+                >
+                  <span>View Projects</span>
+                  <ArrowDown size={17} />
+                </a>
+              </Button>
             </MagneticButton>
 
             {/* Download Resume */}
             <MagneticButton>
-              <a
-                href={personalInfo.resumeUrl}
-                download="Radhika_Kandalkar_Resume.pdf"
-                target="_blank"
-                rel="noreferrer"
-                data-cursor="Open"
-                className="hero-cta-btn"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.85rem 1.5rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(139, 92, 246, 0.1)',
-                  color: 'var(--color-lavender)',
-                  fontWeight: 600,
-                  fontSize: '0.95rem',
-                  border: '1px solid var(--border-medium)',
-                  backdropFilter: 'blur(8px)',
-                  transition: 'all 0.25s ease',
-                }}
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="rounded-full bg-[rgba(139,92,246,0.1)] text-[var(--color-lavender)] font-semibold text-sm border-[var(--border-medium)] backdrop-blur-md hover:bg-[rgba(139,92,246,0.2)] hover:text-white px-6 py-3.5 h-auto transition-all"
               >
-                <FileText size={17} />
-                <span>Download Resume</span>
-              </a>
+                <a
+                  href={personalInfo.resumeUrl}
+                  download="Radhika_Kandalkar_Resume.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  data-cursor="Open"
+                  className="hero-cta-btn inline-flex items-center gap-2"
+                >
+                  <FileText size={17} />
+                  <span>Download Resume</span>
+                </a>
+              </Button>
             </MagneticButton>
 
             {/* Contact Me */}
             <MagneticButton>
-              <a
-                href="#contact"
-                data-cursor="Open"
-                className="hero-cta-btn"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.85rem 1.4rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  color: 'var(--text-secondary)',
-                  fontWeight: 500,
-                  fontSize: '0.95rem',
-                  border: '1px solid var(--border-glass)',
-                  transition: 'all 0.25s ease',
-                }}
+              <Button
+                asChild
+                variant="ghost"
+                size="lg"
+                className="rounded-full bg-[rgba(255,255,255,0.04)] text-[var(--text-secondary)] font-medium text-sm border border-[var(--border-glass)] hover:bg-[rgba(255,255,255,0.08)] hover:text-white px-6 py-3.5 h-auto transition-all"
               >
-                <Mail size={17} />
-                <span>Contact Me</span>
-              </a>
+                <a
+                  href="#contact"
+                  data-cursor="Open"
+                  className="hero-cta-btn inline-flex items-center gap-2"
+                >
+                  <Mail size={17} />
+                  <span>Contact Me</span>
+                </a>
+              </Button>
             </MagneticButton>
           </div>
         </motion.div>
@@ -287,8 +270,8 @@ export default function Hero() {
             minHeight: '440px',
           }}
         >
-          {/* Animated Aurora Glow behind Avatar */}
-          <div className="hero-aurora-glow" aria-hidden="true" />
+          {/* 21st.dev inspired Aurora and Spotlight effect */}
+          <HeroAurora />
 
           {/* Floating Ambient Particles */}
           {!prefersReducedMotion && (

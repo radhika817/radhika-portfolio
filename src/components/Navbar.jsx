@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 import { personalInfo } from '../data/content'
 import MagneticButton from './MagneticButton'
 import MobileMenu from './MobileMenu'
+import { Button } from '@/components/ui/button'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 
 export const NAV_LINKS = [
   { name: 'About', href: '#about' },
@@ -15,12 +17,13 @@ export const NAV_LINKS = [
 ]
 
 /**
- * Glassmorphism Navbar fixed on top with RK monogram logo,
- * smooth section links, Resume download CTA, and animated mobile menu.
+ * 21st.dev inspired Floating Pill Glassmorphism Navbar with sliding active indicator,
+ * Monogram logo, smooth section links, and Resume CTA.
  */
 export default function Navbar({ activeSection }) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,36 +36,13 @@ export default function Navbar({ activeSection }) {
 
   return (
     <>
-      <header
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          transition: 'all 0.3s ease',
-          background: isScrolled
-            ? 'rgba(7, 4, 13, 0.88)'
-            : 'rgba(7, 4, 13, 0.45)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: `1px solid ${
-            isScrolled ? 'rgba(139, 92, 246, 0.22)' : 'rgba(139, 92, 246, 0.08)'
-          }`,
-          boxShadow: isScrolled
-            ? '0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(139, 92, 246, 0.12)'
-            : 'none',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1240px',
-            margin: '0 auto',
-            padding: '0.85rem 1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
+      <header className="fixed top-3 md:top-5 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+        <nav
+          className={`pointer-events-auto flex items-center justify-between gap-3 md:gap-6 px-3.5 py-2 md:px-5 md:py-2.5 rounded-full transition-all duration-300 max-w-fit md:min-w-[680px] lg:min-w-[780px] ${
+            isScrolled
+              ? 'bg-[#0d0718]/90 border border-violet-500/30 shadow-[0_12px_40px_rgba(0,0,0,0.7),0_0_24px_rgba(139,92,246,0.22)] backdrop-blur-xl'
+              : 'bg-[#0d0718]/70 border border-violet-500/20 shadow-[0_8px_30px_rgba(0,0,0,0.5),0_0_18px_rgba(139,92,246,0.12)] backdrop-blur-lg'
+          }`}
         >
           {/* Monogram Logo "RK" */}
           <MagneticButton>
@@ -70,59 +50,19 @@ export default function Navbar({ activeSection }) {
               href="#hero"
               data-cursor="Open"
               onClick={() => setIsMobileMenuOpen(false)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.65rem',
-                textDecoration: 'none',
-              }}
+              className="flex items-center gap-2.5 text-decoration-none group"
             >
-              <span
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '10px',
-                  background:
-                    'linear-gradient(135deg, rgba(139, 92, 246, 0.35) 0%, rgba(109, 40, 217, 0.15) 100%)',
-                  border: '1.5px solid rgba(196, 181, 253, 0.45)',
-                  color: '#ffffff',
-                  fontFamily: 'var(--font-mono)',
-                  fontWeight: 700,
-                  fontSize: '1rem',
-                  boxShadow: '0 0 15px rgba(139, 92, 246, 0.3)',
-                  letterSpacing: '-0.02em',
-                }}
-              >
+              <span className="w-9 h-9 flex items-center justify-center rounded-full bg-gradient-to-br from-violet-500/40 to-violet-900/40 border border-violet-400/50 text-white font-mono font-bold text-sm shadow-[0_0_12px_rgba(139,92,246,0.35)] group-hover:scale-105 group-hover:border-violet-300 transition-all">
                 RK
               </span>
-              <span
-                style={{
-                  display: 'none',
-                  fontFamily: 'var(--font-display)',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  color: 'var(--text-primary)',
-                  letterSpacing: '-0.01em',
-                }}
-                className="navbar-brand-name"
-              >
-                {personalInfo.name}
+              <span className="hidden sm:inline font-heading font-semibold text-sm text-[var(--text-primary)] tracking-tight group-hover:text-violet-200 transition-colors">
+                {personalInfo.name.split(' ')[0]}
               </span>
             </a>
           </MagneticButton>
 
-          {/* Desktop Nav Links */}
-          <nav
-            className="desktop-nav"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1.5rem',
-            }}
-          >
+          {/* Desktop Floating Pill Nav Links */}
+          <div className="hidden md:flex items-center gap-1 bg-[#130b24]/50 border border-violet-500/15 rounded-full p-1">
             {NAV_LINKS.map((link) => {
               const isActive = activeSection === link.href.substring(1)
               return (
@@ -130,102 +70,69 @@ export default function Navbar({ activeSection }) {
                   key={link.name}
                   href={link.href}
                   data-cursor="Open"
-                  style={{
-                    position: 'relative',
-                    fontSize: '0.9rem',
-                    fontWeight: isActive ? 600 : 500,
-                    color: isActive ? 'var(--color-lavender)' : 'var(--text-secondary)',
-                    textDecoration: 'none',
-                    padding: '0.35rem 0.6rem',
-                    borderRadius: 'var(--radius-sm)',
-                    transition: 'all 0.2s ease',
-                    background: isActive ? 'rgba(139, 92, 246, 0.12)' : 'transparent',
-                  }}
+                  className={`relative px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors select-none ${
+                    isActive
+                      ? 'text-white'
+                      : 'text-[var(--text-secondary)] hover:text-white'
+                  }`}
                 >
-                  {link.name}
                   {isActive && (
-                    <span
-                      style={{
-                        position: 'absolute',
-                        bottom: '-2px',
-                        left: '20%',
-                        right: '20%',
-                        height: '2px',
-                        background: 'var(--color-violet-light)',
-                        borderRadius: '9999px',
-                        boxShadow: '0 0 8px var(--color-violet)',
-                      }}
+                    <motion.div
+                      layoutId={prefersReducedMotion ? undefined : 'active-pill'}
+                      className="absolute inset-0 rounded-full bg-violet-600/30 border border-violet-400/40 shadow-[0_0_12px_rgba(139,92,246,0.3)] -z-10"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
+                  <span>{link.name}</span>
                 </a>
               )
             })}
-          </nav>
+          </div>
 
           {/* Action button & Mobile toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div className="flex items-center gap-2">
             {/* Desktop Resume CTA */}
-            <div className="desktop-resume-btn">
+            <div className="hidden sm:block">
               <MagneticButton>
-                <a
-                  href={personalInfo.resumeUrl}
-                  download="Radhika_Kandalkar_Resume.pdf"
-                  target="_blank"
-                  rel="noreferrer"
-                  data-cursor="Open"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.45rem',
-                    padding: '0.5rem 1.1rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(139, 92, 246, 0.12)',
-                    border: '1px solid var(--border-medium)',
-                    color: 'var(--color-lavender)',
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    backdropFilter: 'blur(8px)',
-                    transition: 'all 0.2s ease',
-                  }}
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full bg-violet-500/10 border-violet-500/30 text-[var(--color-lavender)] hover:bg-violet-500/25 hover:text-white backdrop-blur-md px-3.5 py-1.5 h-auto text-xs font-semibold tracking-wide transition-all shadow-[0_0_12px_rgba(139,92,246,0.15)]"
                 >
-                  <FileText size={15} />
-                  <span>Resume</span>
-                </a>
+                  <a
+                    href={personalInfo.resumeUrl}
+                    download="Radhika_Kandalkar_Resume.pdf"
+                    target="_blank"
+                    rel="noreferrer"
+                    data-cursor="Open"
+                    className="inline-flex items-center gap-1.5"
+                  >
+                    <FileText size={13} />
+                    <span>Resume</span>
+                  </a>
+                </Button>
               </MagneticButton>
             </div>
 
             {/* Mobile Hamburger Toggle Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="mobile-hamburger-btn"
+              className="md:hidden w-9 h-9 rounded-full bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-[var(--color-lavender)] hover:text-white cursor-pointer transition-all"
               aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isMobileMenuOpen}
               data-cursor="Open"
-              style={{
-                display: 'none',
-                width: '40px',
-                height: '40px',
-                borderRadius: '10px',
-                background: isMobileMenuOpen ? 'rgba(139, 92, 246, 0.25)' : 'rgba(139, 92, 246, 0.12)',
-                border: '1px solid var(--border-medium)',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--color-lavender)',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
             >
               <motion.div
                 animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
                 transition={{ duration: 0.2 }}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                className="flex items-center justify-center"
               >
-                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
               </motion.div>
             </button>
           </div>
-        </div>
+        </nav>
       </header>
 
       {/* Mobile Menu Overlay */}

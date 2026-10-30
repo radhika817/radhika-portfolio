@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Trophy, Award, Medal, Flag, Sparkles, TrendingUp, Users } from 'lucide-react'
+import { Trophy, Award, Medal, Flag, Sparkles } from 'lucide-react'
 import { achievements } from '../data/content'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { Timeline, TimelineItem, TimelineIcon, TimelineContent } from '@/components/ui/timeline'
+import { Badge } from '@/components/ui/badge'
 
 /**
  * Animated number counter with smooth cubic ease-out
@@ -55,8 +57,8 @@ const ACHIEVEMENT_CONFIGS = {
   'sinhgad-hackathon': {
     icon: Trophy,
     color: '#fbbf24',
-    bg: 'rgba(245, 158, 11, 0.12)',
-    border: 'rgba(245, 158, 11, 0.35)',
+    bg: 'rgba(245, 158, 11, 0.14)',
+    border: 'rgba(245, 158, 11, 0.4)',
     glow: '0 0 32px rgba(245, 158, 11, 0.22)',
     metrics: [
       { end: 100, suffix: '', label: 'Teams Competed' },
@@ -66,8 +68,8 @@ const ACHIEVEMENT_CONFIGS = {
   'vellora-hackathon': {
     icon: Medal,
     color: '#a78bfa',
-    bg: 'rgba(139, 92, 246, 0.1)',
-    border: 'rgba(139, 92, 246, 0.25)',
+    bg: 'rgba(139, 92, 246, 0.12)',
+    border: 'rgba(139, 92, 246, 0.3)',
     glow: '0 0 20px rgba(139, 92, 246, 0.15)',
     metrics: [
       { end: 400, suffix: '+', label: 'Participating Teams' },
@@ -77,8 +79,8 @@ const ACHIEVEMENT_CONFIGS = {
   'project-expo': {
     icon: Award,
     color: '#38bdf8',
-    bg: 'rgba(56, 189, 248, 0.1)',
-    border: 'rgba(56, 189, 248, 0.25)',
+    bg: 'rgba(56, 189, 248, 0.12)',
+    border: 'rgba(56, 189, 248, 0.3)',
     glow: '0 0 20px rgba(56, 189, 248, 0.15)',
     metrics: [
       { end: 70, suffix: '+', label: 'Participating Teams' },
@@ -88,8 +90,8 @@ const ACHIEVEMENT_CONFIGS = {
   'decode-sih': {
     icon: Medal,
     color: '#34d399',
-    bg: 'rgba(16, 185, 129, 0.1)',
-    border: 'rgba(16, 185, 129, 0.25)',
+    bg: 'rgba(16, 185, 129, 0.12)',
+    border: 'rgba(16, 185, 129, 0.3)',
     glow: '0 0 20px rgba(16, 185, 129, 0.15)',
     metrics: [
       { end: 1000, suffix: '+', label: 'Teams in Pool' },
@@ -99,8 +101,8 @@ const ACHIEVEMENT_CONFIGS = {
   'sih-2026': {
     icon: Flag,
     color: '#f472b6',
-    bg: 'rgba(244, 114, 182, 0.1)',
-    border: 'rgba(244, 114, 182, 0.25)',
+    bg: 'rgba(244, 114, 182, 0.12)',
+    border: 'rgba(244, 114, 182, 0.3)',
     glow: '0 0 20px rgba(244, 114, 182, 0.15)',
     metrics: [
       { end: 1, suffix: 'st Round', label: 'Selection Qualified' },
@@ -109,30 +111,8 @@ const ACHIEVEMENT_CONFIGS = {
   },
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.14,
-    },
-  },
-}
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.55,
-      ease: [0.16, 1, 0.3, 1],
-    },
-  },
-}
-
 /**
- * Achievements Section with scroll-reveal animations and animated number counters.
+ * Achievements Section with stat counters and 21st.dev inspired Timeline component
  */
 export default function Achievements() {
   const prefersReducedMotion = useReducedMotion()
@@ -195,142 +175,66 @@ export default function Achievements() {
         </p>
       </motion.div>
 
-      {/* High-Impact Animated Counters Strip */}
+      {/* High-Impact Stat Counters Strip */}
       <motion.div
         initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))',
-          gap: '1rem',
-          marginBottom: '2.5rem',
-        }}
+        transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
       >
         <div
-          style={{
-            background: 'rgba(19, 11, 36, 0.7)',
-            border: '1px solid rgba(245, 158, 11, 0.3)',
-            borderRadius: 'var(--radius-md)',
-            padding: '1.25rem',
-            backdropFilter: 'blur(10px)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-          }}
+          data-cursor="View"
+          className="bg-[#130b24]/70 border border-amber-500/30 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:border-amber-400/50 hover:bg-[#180d2f] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none cursor-pointer"
         >
-          <div
-            style={{
-              fontSize: '2rem',
-              fontWeight: 800,
-              color: '#fbbf24',
-              fontFamily: 'var(--font-display)',
-              lineHeight: 1.1,
-              marginBottom: '0.25rem',
-            }}
-          >
+          <div className="text-2xl md:text-3xl font-extrabold text-amber-400 font-display mb-1">
             <AnimatedCounter end={100} suffix=" Teams" />
           </div>
-          <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+          <div className="text-xs md:text-sm text-[var(--text-secondary)]">
             Sinhgad Hackathon field
           </div>
         </div>
 
         <div
-          style={{
-            background: 'rgba(19, 11, 36, 0.7)',
-            border: '1px solid rgba(139, 92, 246, 0.25)',
-            borderRadius: 'var(--radius-md)',
-            padding: '1.25rem',
-            backdropFilter: 'blur(10px)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-          }}
+          data-cursor="View"
+          className="bg-[#130b24]/70 border border-violet-500/25 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:border-violet-400/50 hover:bg-[#180d2f] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none cursor-pointer"
         >
-          <div
-            style={{
-              fontSize: '2rem',
-              fontWeight: 800,
-              color: '#a78bfa',
-              fontFamily: 'var(--font-display)',
-              lineHeight: 1.1,
-              marginBottom: '0.25rem',
-            }}
-          >
-            <AnimatedCounter end={500} suffix="+ Participants" />
+          <div className="text-2xl md:text-3xl font-extrabold text-[var(--color-violet-light)] font-display mb-1">
+            <AnimatedCounter end={500} suffix="+ Devs" />
           </div>
-          <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+          <div className="text-xs md:text-sm text-[var(--text-secondary)]">
             Outranked in 24hr sprint
           </div>
         </div>
 
         <div
-          style={{
-            background: 'rgba(19, 11, 36, 0.7)',
-            border: '1px solid rgba(56, 189, 248, 0.25)',
-            borderRadius: 'var(--radius-md)',
-            padding: '1.25rem',
-            backdropFilter: 'blur(10px)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-          }}
+          data-cursor="View"
+          className="bg-[#130b24]/70 border border-sky-400/25 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:border-sky-400/50 hover:bg-[#180d2f] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none cursor-pointer"
         >
-          <div
-            style={{
-              fontSize: '2rem',
-              fontWeight: 800,
-              color: '#38bdf8',
-              fontFamily: 'var(--font-display)',
-              lineHeight: 1.1,
-              marginBottom: '0.25rem',
-            }}
-          >
+          <div className="text-2xl md:text-3xl font-extrabold text-sky-400 font-display mb-1">
             <AnimatedCounter end={400} suffix="+ Teams" />
           </div>
-          <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+          <div className="text-xs md:text-sm text-[var(--text-secondary)]">
             Vellora Hackathon pool
           </div>
         </div>
 
         <div
-          style={{
-            background: 'rgba(19, 11, 36, 0.7)',
-            border: '1px solid rgba(16, 185, 129, 0.25)',
-            borderRadius: 'var(--radius-md)',
-            padding: '1.25rem',
-            backdropFilter: 'blur(10px)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-          }}
+          data-cursor="View"
+          className="bg-[#130b24]/70 border border-emerald-400/25 rounded-xl p-4 md:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:border-emerald-400/50 hover:bg-[#180d2f] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none cursor-pointer"
         >
-          <div
-            style={{
-              fontSize: '2rem',
-              fontWeight: 800,
-              color: '#34d399',
-              fontFamily: 'var(--font-display)',
-              lineHeight: 1.1,
-              marginBottom: '0.25rem',
-            }}
-          >
-            <AnimatedCounter end={1000} suffix="+ Teams" />
+          <div className="text-2xl md:text-3xl font-extrabold text-emerald-400 font-display mb-1">
+            <AnimatedCounter end={1000} suffix="+ Pool" />
           </div>
-          <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+          <div className="text-xs md:text-sm text-[var(--text-secondary)]">
             Decode SIH national pool
           </div>
         </div>
       </motion.div>
 
-      {/* Staggered Scroll-Reveal Achievements Cards */}
-      <motion.div
-        className="achievements-grid"
-        variants={prefersReducedMotion ? {} : containerVariants}
-        initial={prefersReducedMotion ? false : 'hidden'}
-        whileInView="visible"
-        viewport={{ once: true, margin: '-40px' }}
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
-          gap: '1.5rem',
-        }}
-      >
-        {achievements.map((item) => {
+      {/* 21st.dev inspired Timeline Component */}
+      <Timeline className="mt-8">
+        {achievements.map((item, index) => {
           const config = ACHIEVEMENT_CONFIGS[item.id] || ACHIEVEMENT_CONFIGS['vellora-hackathon']
           const IconComponent = config.icon
           const isWinner = item.highlight
@@ -338,186 +242,84 @@ export default function Achievements() {
           return (
             <motion.div
               key={item.id}
-              variants={prefersReducedMotion ? {} : cardVariants}
-              whileHover={
-                prefersReducedMotion
-                  ? {}
-                  : { y: -4, transition: { duration: 0.2 } }
-              }
-              className={`achievement-card ${isWinner ? 'achievement-card-featured' : ''}`}
-              style={{
-                position: 'relative',
-                background: isWinner
-                  ? 'linear-gradient(135deg, rgba(31, 20, 56, 0.88) 0%, rgba(19, 11, 36, 0.88) 100%)'
-                  : 'rgba(19, 11, 36, 0.65)',
-                border: `1px solid ${isWinner ? config.border : 'var(--border-subtle)'}`,
-                borderRadius: 'var(--radius-lg)',
-                padding: '1.75rem',
-                backdropFilter: 'blur(12px)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                boxShadow: isWinner ? config.glow : '0 8px 30px rgba(0, 0, 0, 0.3)',
-                gridColumn: isWinner ? '1 / -1' : 'auto',
-                transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
-              }}
+              initial={prefersReducedMotion ? false : { opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div>
-                {/* Card Top Row: Icon + Badge */}
-                <div
+              <TimelineItem>
+                <TimelineIcon
+                  data-cursor="View"
                   style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-between',
-                    gap: '1rem',
-                    marginBottom: '1.25rem',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: isWinner ? '48px' : '40px',
-                      height: isWinner ? '48px' : '40px',
-                      borderRadius: '12px',
-                      background: config.bg,
-                      border: `1px solid ${config.border}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: config.color,
-                      boxShadow: isWinner ? `0 0 16px ${config.color}55` : 'none',
-                    }}
-                  >
-                    <IconComponent size={isWinner ? 24 : 20} />
-                  </div>
-
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '0.78rem',
-                      fontWeight: 600,
-                      color: config.color,
-                      background: config.bg,
-                      border: `1px solid ${config.border}`,
-                      padding: '0.25rem 0.75rem',
-                      borderRadius: 'var(--radius-full)',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {item.badge}
-                  </span>
-                </div>
-
-                {/* Achievement Title */}
-                <h3
-                  style={{
-                    fontSize: isWinner ? '1.45rem' : '1.15rem',
-                    fontWeight: 700,
-                    color: isWinner ? '#ffffff' : 'var(--text-primary)',
-                    marginBottom: '0.65rem',
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  {item.title}
-                </h3>
-
-                {/* Achievement Description verbatim from README */}
-                <p
-                  style={{
-                    color: isWinner ? 'var(--text-primary)' : 'var(--text-secondary)',
-                    fontSize: isWinner ? '1.02rem' : '0.92rem',
-                    lineHeight: 1.6,
-                    opacity: isWinner ? 0.95 : 0.85,
-                  }}
-                >
-                  {item.description}
-                </p>
-
-                {/* Sub-Metrics Counters for each card */}
-                {config.metrics && config.metrics.length > 0 && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: '0.75rem',
-                      marginTop: '1.25rem',
-                    }}
-                  >
-                    {config.metrics.map((metric, mIdx) => (
-                      <div
-                        key={mIdx}
-                        style={{
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          border: '1px solid rgba(255, 255, 255, 0.08)',
-                          borderRadius: 'var(--radius-sm)',
-                          padding: '0.4rem 0.75rem',
-                          display: 'inline-flex',
-                          alignItems: 'baseline',
-                          gap: '0.4rem',
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontWeight: 700,
-                            fontFamily: 'var(--font-display)',
-                            color: config.color,
-                            fontSize: '0.95rem',
-                          }}
-                        >
-                          <AnimatedCounter
-                            end={metric.end}
-                            prefix={metric.prefix || ''}
-                            suffix={metric.suffix || ''}
-                          />
-                        </span>
-                        <span
-                          style={{
-                            fontSize: '0.72rem',
-                            color: 'var(--text-muted)',
-                            fontFamily: 'var(--font-mono)',
-                          }}
-                        >
-                          {metric.label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Decorative footer tag */}
-              <div
-                style={{
-                  marginTop: '1.5rem',
-                  paddingTop: '1rem',
-                  borderTop: '1px solid rgba(139, 92, 246, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.72rem',
-                    color: 'var(--text-muted)',
-                  }}
-                >
-                  {isWinner ? '★ 1st Place Champion' : 'Verified Finalist'}
-                </span>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.72rem',
+                    backgroundColor: isWinner ? 'rgba(245, 158, 11, 0.16)' : '#0d0718',
+                    borderColor: config.border,
                     color: config.color,
+                    boxShadow: isWinner ? config.glow : undefined,
                   }}
                 >
-                  Competitive Track
-                </span>
-              </div>
+                  <IconComponent size={22} />
+                </TimelineIcon>
+
+                <TimelineContent
+                  data-cursor="View"
+                  className={isWinner ? 'border-amber-500/40 bg-gradient-to-br from-[#1f1438]/90 to-[#130b24]/90 shadow-[0_0_35px_rgba(245,158,11,0.18)]' : ''}
+                >
+                  {/* Top Bar: Date + Badge */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span className="text-xs font-mono text-[var(--color-violet-light)] tracking-wider">
+                      {item.date}
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="font-mono text-xs font-semibold px-2.5 py-0.5 rounded-full"
+                      style={{
+                        backgroundColor: config.bg,
+                        borderColor: config.border,
+                        color: config.color,
+                      }}
+                    >
+                      {item.badge}
+                    </Badge>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className={`font-bold mb-2 tracking-tight ${isWinner ? 'text-lg md:text-xl text-white' : 'text-base md:text-lg text-[var(--text-primary)]'}`}>
+                    {item.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-[var(--text-secondary)] text-sm md:text-[0.95rem] leading-relaxed mb-4">
+                    {item.description}
+                  </p>
+
+                  {/* Metrics Chips */}
+                  {config.metrics && config.metrics.length > 0 && (
+                    <div className="flex flex-wrap gap-2.5 pt-3 border-t border-violet-500/15">
+                      {config.metrics.map((metric, mIdx) => (
+                        <div
+                          key={mIdx}
+                          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-mono"
+                        >
+                          <span className="font-bold" style={{ color: config.color }}>
+                            <AnimatedCounter
+                              end={metric.end}
+                              prefix={metric.prefix || ''}
+                              suffix={metric.suffix || ''}
+                            />
+                          </span>
+                          <span className="text-[var(--text-muted)]">
+                            {metric.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </TimelineContent>
+              </TimelineItem>
             </motion.div>
           )
         })}
-      </motion.div>
+      </Timeline>
     </section>
   )
 }

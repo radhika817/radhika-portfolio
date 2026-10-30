@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X, ExternalLink, Trophy, CheckCircle2, ShieldCheck, Cpu, Clock } from 'lucide-react'
-import { useReducedMotion } from '../hooks/useReducedMotion'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
+import { ExternalLink, Trophy, CheckCircle2, ShieldCheck, Cpu, Clock } from 'lucide-react'
 
 function GithubIcon({ size = 16, ...props }) {
   return (
@@ -73,82 +74,9 @@ const CASE_STUDY_DETAILS = {
 
 /**
  * ProjectCaseStudyModal displaying Problem, Approach, Engineering Decisions,
- * Tech Stack, and Links with Esc key listener and focus management.
+ * Tech Stack, and Links using accessible shadcn Dialog with focus trapping and Esc key support.
  */
 export default function ProjectCaseStudyModal({ project, isOpen, onClose }) {
-  const prefersReducedMotion = useReducedMotion()
-  const modalRef = useRef(null)
-  const previousActiveElementRef = useRef(null)
-
-  // Manage body scroll, focus trapping, and Escape key
-  useEffect(() => {
-    if (isOpen) {
-      previousActiveElementRef.current = document.activeElement
-      document.body.style.overflow = 'hidden'
-
-      // Move focus to first interactive element inside modal
-      requestAnimationFrame(() => {
-        if (modalRef.current) {
-          const focusable = Array.from(
-            modalRef.current.querySelectorAll(
-              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-            )
-          ).filter((el) => !el.hasAttribute('disabled'))
-          if (focusable.length > 0) {
-            focusable[0].focus()
-          }
-        }
-      })
-
-      const handleKeyDown = (e) => {
-        if (e.key === 'Escape') {
-          onClose()
-          return
-        }
-
-        // Focus trap
-        if (e.key === 'Tab' && modalRef.current) {
-          const focusable = Array.from(
-            modalRef.current.querySelectorAll(
-              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-            )
-          ).filter((el) => !el.hasAttribute('disabled'))
-
-          if (focusable.length === 0) return
-
-          const first = focusable[0]
-          const last = focusable[focusable.length - 1]
-
-          if (e.shiftKey) {
-            if (document.activeElement === first) {
-              e.preventDefault()
-              last.focus()
-            }
-          } else {
-            if (document.activeElement === last) {
-              e.preventDefault()
-              first.focus()
-            }
-          }
-        }
-      }
-
-      window.addEventListener('keydown', handleKeyDown)
-      return () => {
-        document.body.style.overflow = ''
-        window.removeEventListener('keydown', handleKeyDown)
-        if (
-          previousActiveElementRef.current &&
-          typeof previousActiveElementRef.current.focus === 'function'
-        ) {
-          previousActiveElementRef.current.focus()
-        }
-      }
-    } else {
-      document.body.style.overflow = ''
-    }
-  }, [isOpen, onClose])
-
   if (!project) return null
 
   const details = CASE_STUDY_DETAILS[project.id] || {
@@ -162,372 +90,158 @@ export default function ProjectCaseStudyModal({ project, isOpen, onClose }) {
   const hasAward = project.award || project.id === 'socio3'
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="case-study-title"
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 10000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1.25rem',
-          }}
-        >
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={onClose}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundColor: 'rgba(7, 4, 13, 0.88)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-            }}
-          />
-
-          {/* Modal Card */}
-          <motion.div
-            ref={modalRef}
-            className="case-study-modal-card"
-            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 15 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 15 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              position: 'relative',
-              width: '100%',
-              maxWidth: '740px',
-              maxHeight: '88vh',
-              overflowY: 'auto',
-              background: 'linear-gradient(135deg, rgba(20, 12, 38, 0.96) 0%, rgba(10, 6, 20, 0.98) 100%)',
-              border: '1.5px solid rgba(167, 139, 250, 0.35)',
-              borderRadius: 'var(--radius-xl)',
-              padding: '2.25rem',
-              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.7), 0 0 50px rgba(139, 92, 246, 0.25)',
-              zIndex: 1,
-            }}
-          >
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              aria-label="Close case study modal"
-              data-cursor="Open"
-              style={{
-                position: 'absolute',
-                top: '1.5rem',
-                right: '1.5rem',
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                background: 'rgba(139, 92, 246, 0.12)',
-                border: '1px solid var(--border-medium)',
-                color: 'var(--color-lavender)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[740px] max-h-[88vh] overflow-y-auto bg-gradient-to-br from-[#140c26]/98 to-[#0a0614]/99 border-[1.5px] border-violet-400/35 rounded-2xl p-6 sm:p-9 shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_50px_rgba(139,92,246,0.25)] text-foreground">
+        {/* Award Badge if present */}
+        {hasAward && (
+          <div className="mb-2">
+            <Badge
+              variant="outline"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/15 border-amber-500/45 text-amber-400 font-mono text-xs font-semibold shadow-[0_0_15px_rgba(245,158,11,0.25)]"
             >
-              <X size={18} />
-            </button>
+              <Trophy size={14} className="text-amber-500" />
+              <span>1st Place, Sinhgad Hackathon 2026 (500+ participants)</span>
+            </Badge>
+          </div>
+        )}
 
-            {/* Award Badge if present */}
-            {hasAward && (
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.3rem 0.85rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(245, 158, 11, 0.15)',
-                  border: '1px solid rgba(245, 158, 11, 0.45)',
-                  color: '#fbbf24',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  fontFamily: 'var(--font-mono)',
-                  boxShadow: '0 0 15px rgba(245, 158, 11, 0.25)',
-                  marginBottom: '1rem',
-                }}
-              >
-                <Trophy size={14} color="#f59e0b" />
-                <span>1st Place, Sinhgad Hackathon 2026 (500+ participants)</span>
-              </div>
-            )}
+        {/* Title & Subtitle */}
+        <DialogHeader className="gap-1 mb-2 pr-8 text-left">
+          <DialogTitle className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight font-heading">
+            {project.title}
+          </DialogTitle>
+          <DialogDescription className="text-sm sm:text-base font-mono text-[var(--color-violet-light)] font-medium">
+            {project.subtitle}
+          </DialogDescription>
+        </DialogHeader>
 
-            {/* Title & Subtitle */}
-            <div style={{ marginBottom: '1.5rem', paddingRight: '2.5rem' }}>
-              <h2
-                id="case-study-title"
-                style={{
-                  fontSize: 'clamp(1.75rem, 3.5vw, 2.25rem)',
-                  fontWeight: 800,
-                  color: 'var(--text-primary)',
-                  letterSpacing: '-0.02em',
-                  marginBottom: '0.35rem',
-                }}
-              >
-                {project.title}
-              </h2>
-              <p
-                style={{
-                  fontSize: '1rem',
-                  fontFamily: 'var(--font-mono)',
-                  color: 'var(--color-violet-light)',
-                  fontWeight: 500,
-                }}
-              >
-                {project.subtitle}
-              </p>
-            </div>
-
-            {/* Tech Stack Chips */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '0.5rem',
-                marginBottom: '2rem',
-                paddingBottom: '1.25rem',
-                borderBottom: '1px solid rgba(139, 92, 246, 0.15)',
-              }}
+        {/* Tech Stack Chips */}
+        <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-violet-500/15">
+          {project.tech.map((t) => (
+            <Badge
+              key={t}
+              variant="secondary"
+              className="text-xs font-mono px-3 py-0.5 rounded-[var(--radius-xs)] bg-violet-500/15 text-[var(--color-lavender)] border border-violet-500/30 hover:bg-violet-500/25 transition-colors"
             >
-              {project.tech.map((t) => (
-                <span
-                  key={t}
-                  style={{
-                    fontSize: '0.8rem',
-                    fontFamily: 'var(--font-mono)',
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: 'var(--radius-xs)',
-                    background: 'rgba(139, 92, 246, 0.15)',
-                    color: 'var(--color-lavender)',
-                    border: '1px solid rgba(139, 92, 246, 0.3)',
-                  }}
+              {t}
+            </Badge>
+          ))}
+        </div>
+
+        {/* Case Study Body: Problem, Approach, Decisions */}
+        <div className="flex flex-col gap-6">
+          {/* Problem Statement */}
+          <div>
+            <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--color-lavender)] flex items-center gap-1.5 mb-2 font-semibold">
+              <Cpu size={15} />
+              <span>The Problem</span>
+            </h3>
+            <p className="text-[var(--text-secondary)] leading-relaxed text-[0.95rem]">
+              {details.problem}
+            </p>
+          </div>
+
+          {/* Architectural Approach */}
+          <div>
+            <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--color-lavender)] flex items-center gap-1.5 mb-2 font-semibold">
+              <ShieldCheck size={15} />
+              <span>Architectural Approach</span>
+            </h3>
+            <p className="text-[var(--text-secondary)] leading-relaxed text-[0.95rem]">
+              {details.approach}
+            </p>
+          </div>
+
+          {/* Key Engineering Decisions / Features */}
+          <div>
+            <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--color-lavender)] flex items-center gap-1.5 mb-3 font-semibold">
+              <CheckCircle2 size={15} />
+              <span>Key Engineering Decisions & Features</span>
+            </h3>
+            <ul className="list-none flex flex-col gap-3 p-0 m-0">
+              {details.decisions.map((decision, idx) => (
+                <li
+                  key={idx}
+                  className="flex items-start gap-2.5 text-[var(--text-secondary)] text-[0.93rem] leading-relaxed"
                 >
-                  {t}
-                </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-violet-light)] mt-2 shrink-0 shadow-[0_0_6px_var(--color-violet)]" />
+                  <span>{decision}</span>
+                </li>
               ))}
-            </div>
+            </ul>
+          </div>
+        </div>
 
-            {/* Case Study Body: Problem, Approach, Decisions */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-              {/* Problem Statement */}
-              <div>
-                <h3
-                  style={{
-                    fontSize: '0.9rem',
-                    fontFamily: 'var(--font-mono)',
-                    color: 'var(--color-lavender)',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    marginBottom: '0.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                  }}
-                >
-                  <Cpu size={15} />
-                  <span>The Problem</span>
-                </h3>
-                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.65, fontSize: '0.98rem' }}>
-                  {details.problem}
-                </p>
-              </div>
-
-              {/* Architectural Approach */}
-              <div>
-                <h3
-                  style={{
-                    fontSize: '0.9rem',
-                    fontFamily: 'var(--font-mono)',
-                    color: 'var(--color-lavender)',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    marginBottom: '0.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                  }}
-                >
-                  <ShieldCheck size={15} />
-                  <span>Architectural Approach</span>
-                </h3>
-                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.65, fontSize: '0.98rem' }}>
-                  {details.approach}
-                </p>
-              </div>
-
-              {/* Key Engineering Decisions / Features */}
-              <div>
-                <h3
-                  style={{
-                    fontSize: '0.9rem',
-                    fontFamily: 'var(--font-mono)',
-                    color: 'var(--color-lavender)',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    marginBottom: '0.75rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                  }}
-                >
-                  <CheckCircle2 size={15} />
-                  <span>Key Engineering Decisions & Features</span>
-                </h3>
-                <ul
-                  style={{
-                    listStyle: 'none',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.75rem',
-                    padding: 0,
-                  }}
-                >
-                  {details.decisions.map((decision, idx) => (
-                    <li
-                      key={idx}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        gap: '0.65rem',
-                        color: 'var(--text-secondary)',
-                        fontSize: '0.95rem',
-                        lineHeight: 1.55,
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: '6px',
-                          height: '6px',
-                          borderRadius: '50%',
-                          backgroundColor: 'var(--color-violet-light)',
-                          marginTop: '0.5rem',
-                          flexShrink: 0,
-                          boxShadow: '0 0 6px var(--color-violet)',
-                        }}
-                      />
-                      <span>{decision}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Action Links Bar */}
-            <div
-              style={{
-                marginTop: '2.5rem',
-                paddingTop: '1.5rem',
-                borderTop: '1px solid rgba(139, 92, 246, 0.15)',
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '1rem',
-                alignItems: 'center',
-              }}
+        {/* Action Links Bar / Footer */}
+        <DialogFooter className="mt-6 pt-4 border-t border-violet-500/15 flex flex-wrap gap-3 items-center sm:justify-start">
+          {isLiveValid ? (
+            <Button
+              asChild
+              className="rounded-full bg-gradient-to-r from-[var(--color-violet)] to-[#6d28d9] text-white hover:opacity-90 shadow-[0_0_20px_rgba(139,92,246,0.4)] text-sm font-semibold px-5"
             >
-              {isLiveValid ? (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  data-cursor="Open"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.7rem 1.4rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'linear-gradient(135deg, var(--color-violet), #6d28d9)',
-                    color: '#ffffff',
-                    fontSize: '0.9rem',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    boxShadow: '0 0 20px rgba(139, 92, 246, 0.4)',
-                  }}
-                >
-                  <span>Launch Live Demo</span>
-                  <ExternalLink size={15} />
-                </a>
-              ) : (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                data-cursor="Open"
+              >
+                <span>Launch Live Demo</span>
+                <ExternalLink size={15} className="ml-1.5" />
+              </a>
+            </Button>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
                 <span
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    padding: '0.65rem 1.2rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    color: 'var(--text-muted)',
-                    fontSize: '0.85rem',
-                    fontFamily: 'var(--font-mono)',
-                    cursor: 'not-allowed',
-                  }}
+                  tabIndex={0}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[var(--text-muted)] text-xs font-mono cursor-not-allowed select-none"
+                  aria-label="Live demo coming soon"
                 >
                   <Clock size={14} />
                   <span>Live Demo Coming Soon</span>
                 </span>
-              )}
+              </TooltipTrigger>
+              <TooltipContent className="bg-[#180d2f] text-[var(--color-lavender)] border border-violet-500/30 text-xs font-mono shadow-lg">
+                <p>Deployment link coming soon</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
 
-              {isGithubValid ? (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  data-cursor="Open"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.7rem 1.4rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(139, 92, 246, 0.12)',
-                    border: '1px solid var(--border-medium)',
-                    color: 'var(--color-lavender)',
-                    fontSize: '0.9rem',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                  }}
-                >
-                  <GithubIcon size={16} />
-                  <span>View Repository</span>
-                </a>
-              ) : (
+          {isGithubValid ? (
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-full bg-violet-500/10 border-violet-500/30 text-[var(--color-lavender)] hover:bg-violet-500/20 text-sm font-semibold px-5"
+            >
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                data-cursor="Open"
+              >
+                <GithubIcon size={16} className="mr-1.5" />
+                <span>View Repository</span>
+              </a>
+            </Button>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
                 <span
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    padding: '0.65rem 1.2rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    color: 'var(--text-muted)',
-                    fontSize: '0.85rem',
-                    fontFamily: 'var(--font-mono)',
-                    cursor: 'not-allowed',
-                  }}
+                  tabIndex={0}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[var(--text-muted)] text-xs font-mono cursor-not-allowed select-none"
+                  aria-label="Repository link coming soon"
                 >
                   <GithubIcon size={14} style={{ opacity: 0.5 }} />
                   <span>Repository Coming Soon</span>
                 </span>
-              )}
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+              </TooltipTrigger>
+              <TooltipContent className="bg-[#180d2f] text-[var(--color-lavender)] border border-violet-500/30 text-xs font-mono shadow-lg">
+                <p>Repository link being finalized</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
